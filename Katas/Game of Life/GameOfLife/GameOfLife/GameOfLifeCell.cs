@@ -13,14 +13,17 @@ public class GameOfLifeCell
 
     public int CountNeighbours()
     {
+        var count = 0;
         for (var x = -1; x <= 1; x += 2)
         {
-            if (Board.SafeValue(Pos.x + x, Pos.y) == true)
-            {
-                return 1;
-            }
+            count += Board.SafeValue(Pos.x + x, Pos.y) == true ? 1 : 0;
+        }
+        
+        for (var y = -1; y <= 1; y += 2)
+        {
+            count += Board.SafeValue(Pos.x, Pos.y + y) == true ? 1 : 0;
         }
 
-        return 0;
+        return count;
     }
 }
