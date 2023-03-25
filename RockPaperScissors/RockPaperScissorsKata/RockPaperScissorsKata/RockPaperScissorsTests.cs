@@ -2,7 +2,7 @@ using FluentAssertions;
 
 namespace RockPaperScissorsKata;
 
-public class Tests
+public class RockPaperScissorsTests
 {
     public enum RockPaperScissorsEnum
     {
@@ -20,6 +20,16 @@ public class Tests
         Scissors,
         Spock,
         Lizard
+    }
+    
+    public enum RockPaperScissorsLizardSpockOrderedEnum
+    {
+        Draw = 0,
+        Rock = 1,
+        Paper = 2,
+        Scissors = 3,
+        Lizard = 5,
+        Spock = 4
     }
     
     [TestCase(RockPaperScissorsEnum.Paper, RockPaperScissorsEnum.Rock)]
@@ -84,6 +94,36 @@ public class Tests
     {
         var choices = new RpsChoices<RockPaperScissorsLizardSpockEnum>(leftSide, rightSide);
         var rockPaperScissors = new RockPaperScissors<RockPaperScissorsLizardSpockEnum>();
+        
+        rockPaperScissors.Play(choices).Should().Be(leftSide);
+    }
+    
+    [TestCase(RockPaperScissorsLizardSpockEnum.Paper, RockPaperScissorsLizardSpockEnum.Rock)]
+    [TestCase(RockPaperScissorsLizardSpockEnum.Rock, RockPaperScissorsLizardSpockEnum.Scissors)]
+    [TestCase(RockPaperScissorsLizardSpockEnum.Scissors, RockPaperScissorsLizardSpockEnum.Paper)]
+    [TestCase(RockPaperScissorsLizardSpockEnum.Lizard, RockPaperScissorsLizardSpockEnum.Paper)]
+    [TestCase(RockPaperScissorsLizardSpockEnum.Lizard, RockPaperScissorsLizardSpockEnum.Spock)]
+    [TestCase(RockPaperScissorsLizardSpockEnum.Spock, RockPaperScissorsLizardSpockEnum.Rock)]
+    [TestCase(RockPaperScissorsLizardSpockEnum.Spock, RockPaperScissorsLizardSpockEnum.Scissors)]
+    public void SimpleRockPaperScissorsLizardSpockEnumTests_LeftSideWinsWithNewValuesAndOrderedList(RockPaperScissorsLizardSpockEnum leftSide, RockPaperScissorsLizardSpockEnum rightSide)
+    {
+        var choices = new RpsChoices<RockPaperScissorsLizardSpockEnum>(leftSide, rightSide);
+        var rockPaperScissors = new RockPaperScissors<RockPaperScissorsLizardSpockEnum>();
+        
+        rockPaperScissors.Play(choices).Should().Be(leftSide);
+    }
+    
+    [TestCase(RockPaperScissorsLizardSpockOrderedEnum.Paper, RockPaperScissorsLizardSpockOrderedEnum.Rock)]
+    [TestCase(RockPaperScissorsLizardSpockOrderedEnum.Rock, RockPaperScissorsLizardSpockOrderedEnum.Scissors)]
+    [TestCase(RockPaperScissorsLizardSpockOrderedEnum.Scissors, RockPaperScissorsLizardSpockOrderedEnum.Paper)]
+    [TestCase(RockPaperScissorsLizardSpockOrderedEnum.Lizard, RockPaperScissorsLizardSpockOrderedEnum.Paper)]
+    [TestCase(RockPaperScissorsLizardSpockOrderedEnum.Lizard, RockPaperScissorsLizardSpockOrderedEnum.Spock)]
+    [TestCase(RockPaperScissorsLizardSpockOrderedEnum.Spock, RockPaperScissorsLizardSpockOrderedEnum.Rock)]
+    [TestCase(RockPaperScissorsLizardSpockOrderedEnum.Spock, RockPaperScissorsLizardSpockOrderedEnum.Scissors)]
+    public void SimpleRockPaperScissorsLizardSpockOrderedEnumTests_LeftSideWinsWithOrderedList(RockPaperScissorsLizardSpockOrderedEnum leftSide, RockPaperScissorsLizardSpockOrderedEnum rightSide)
+    {
+        var choices = new RpsChoices<RockPaperScissorsLizardSpockOrderedEnum>(leftSide, rightSide);
+        var rockPaperScissors = new RockPaperScissors<RockPaperScissorsLizardSpockOrderedEnum>();
         
         rockPaperScissors.Play(choices).Should().Be(leftSide);
     }

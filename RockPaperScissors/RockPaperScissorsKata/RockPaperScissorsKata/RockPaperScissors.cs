@@ -2,6 +2,13 @@ namespace RockPaperScissorsKata;
 
 public class RockPaperScissors<T> where T : Enum
 {
+    private Dictionary<T, string>? VictoryMessages { get; set; }
+    
+    public RockPaperScissors(Dictionary<T, string>? victoryMessages = null)
+    {
+        VictoryMessages = victoryMessages;
+    }
+
     public T Play(RpsChoices<T> choices)
     {
         var enumValues = Enum.GetValues(typeof(T)) as T[] ?? throw new ArgumentException("Expect specified enum to have values");
@@ -20,13 +27,26 @@ public class RockPaperScissors<T> where T : Enum
             throw new ArgumentException("Please do not select Draw!");
         }
 
-        var result = ((a - b) + numChoices) % numChoices;
+        var result = (a - b + numChoices) % numChoices;
         return result % 2 == 1 ? choices.A : choices.B;
     }
 
-    private int IndexOf(T value, T[] values)
+    public string OutcomeMessage(RpsChoices<T> choices, T winner)
     {
-        for (var i = 0; i < values.Length; ++i)
+        if (Equals(choices.A, choices.B))
+        {
+            return "Draw!";
+        }
+        
+        var loser = Equals(choices.A, winner) ? choices.B : choices.A;
+        var victoryType = VictoryMessages != null && VictoryMessages.ContainsKey(winner) ? VictoryMessages[winner] : "beats";
+        
+        return $"{winner} {victoryType} {loser}!";
+    }
+
+    private static int IndexOf(T value, IReadOnlyList<T> values)
+    {
+        for (var i = 0; i < values.Count; ++i)
         {
             if (Equals(value, values[i]))
             {
