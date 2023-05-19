@@ -15,9 +15,12 @@ public class Tests
         var interviewRota = new InterviewRota(new List<string> {"Alice", "Bob"});
 
         interviewRota.GetNextInterviewer().Should().Be("Alice");
+        interviewRota.RecordInterview("Alice");
         interviewRota.GetNextInterviewer().Should().Be("Bob");
+        interviewRota.RecordInterview("Bob");
         
         var thirdInterviewer = interviewRota.GetNextInterviewer();
+        interviewRota.RecordInterview(thirdInterviewer);
         thirdInterviewer.Should().BeOneOf("Alice", "Bob");
         interviewRota.GetNextInterviewer().Should().BeOneOf("Alice", "Bob").And.NotBe(thirdInterviewer);
     }
@@ -30,7 +33,22 @@ public class Tests
 
         for (var i = 0; i < efforts.Length; ++i)
         {
-            interviewRota.GetNextInterviewer(efforts[i]).Should().Be(expectedOrder[i]);
+            interviewRota.GetNextInterviewer().Should().Be(expectedOrder[i]);
+            interviewRota.RecordInterview(expectedOrder[i], efforts[i]);
         }
+    }
+    
+    [Test]
+    public void WhenInterviewerIsntAvailableThenSelectTheNextPersonButReturnToThemAfter()
+    {
+        var interviewRota = new InterviewRota(new List<string> {"Alice", "Bob", "Clive"});
+
+        interviewRota.GetNextInterviewer().Should().Be("Alice");
+        interviewRota.RecordInterview("Alice");
+        interviewRota.GetNextInterviewer().Should().Be("Bob");
+        interviewRota.GetNextInterviewer().Should().Be("Clive");
+        interviewRota.ReportUnavailable("Bob");
+        interviewRota.RecordInterview("Clive");
+        interviewRota.GetNextInterviewer().Should().Be("Bob");
     }
 }

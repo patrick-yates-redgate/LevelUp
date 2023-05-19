@@ -14,14 +14,23 @@ public class InterviewRota
         }
     }
 
-    public string GetNextInterviewer(int effort = 1)
+    public void RecordInterview(string interviewer, int effort = 1)
+    {
+        interviewersByTotalEffort[interviewer] += effort;
+    }
+
+    public void ReportUnavailable(string interviewer)
+    {
+        
+    }
+
+    public string GetNextInterviewer()
     {
         var orderedPairs = interviewersByTotalEffort.Keys
             .Select(key => (interviewer: key, totalEffort: interviewersByTotalEffort[key]))
             .OrderBy(tuple => tuple.totalEffort);
 
         var interviewer = orderedPairs.FirstOrDefault();
-        interviewersByTotalEffort[interviewer.interviewer] += effort;
 
         return interviewer.interviewer;
     }
