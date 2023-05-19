@@ -2,24 +2,27 @@
 
 public class InterviewRota
 {
-    private IEnumerable<string> interviewers;
-    private IEnumerator<string> interviewEnumerator;
+    private Dictionary<string, int> interviewersByTotalEffort;
 
     public InterviewRota(IEnumerable<string> interviewers)
     {
-        this.interviewers = interviewers;
-        interviewEnumerator = interviewers.GetEnumerator();
+        interviewersByTotalEffort = new();
+
+        foreach (var interviewer in interviewers)
+        {
+            interviewersByTotalEffort[interviewer] = 0;
+        }
     }
 
-    public string GetNextInterviewer()
+    public string GetNextInterviewer(int effort = 1)
     {
-        if (interviewEnumerator.MoveNext())
-        {
-            return interviewEnumerator.Current;
-        }
-        
-        interviewEnumerator = interviewers.GetEnumerator();
-        interviewEnumerator.MoveNext();
-        return interviewEnumerator.Current;
+        var orderedPairs = interviewersByTotalEffort.Keys
+            .Select(key => (interviewer: key, totalEffort: interviewersByTotalEffort[key]))
+            .OrderBy(tuple => tuple.totalEffort);
+
+        var interviewer = orderedPairs.FirstOrDefault();
+        interviewersByTotalEffort[interviewer.interviewer] += effort;
+
+        return interviewer.interviewer;
     }
 }
