@@ -33,7 +33,7 @@ public class Tests
 
         for (var i = 0; i < efforts.Length; ++i)
         {
-            interviewRota.GetNextInterviewer().Should().Be(expectedOrder[i]);
+            interviewRota.GetNextInterviewer(efforts[i]).Should().Be(expectedOrder[i]);
             interviewRota.RecordInterview(expectedOrder[i], efforts[i]);
         }
     }
@@ -43,12 +43,9 @@ public class Tests
     {
         var interviewRota = new InterviewRota(new List<string> {"Alice", "Bob", "Clive"});
 
+        interviewRota.ReportUnavailable("Alice");
+        interviewRota.GetNextInterviewer().Should().Be("Bob");
+        interviewRota.RecordInterview("Bob");
         interviewRota.GetNextInterviewer().Should().Be("Alice");
-        interviewRota.RecordInterview("Alice");
-        interviewRota.GetNextInterviewer().Should().Be("Bob");
-        interviewRota.GetNextInterviewer().Should().Be("Clive");
-        interviewRota.ReportUnavailable("Bob");
-        interviewRota.RecordInterview("Clive");
-        interviewRota.GetNextInterviewer().Should().Be("Bob");
     }
 }
