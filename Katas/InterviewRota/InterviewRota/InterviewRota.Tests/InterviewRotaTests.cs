@@ -57,4 +57,14 @@ public class Tests
         interviewRota.RecordInterview("Clive", language: "C#");
         interviewRota.GetNextInterviewer(language: "C#").Should().Be("Clive");
     }
+
+    [Test]
+    public void IfYouAreUnavailableAndAreSkippedThenWeSetYouAvailableAgain()
+    {
+        var interviewRota = new InterviewRota(new List<string> {"Alice", "Bob"});
+
+        interviewRota.ReportUnavailable("Alice");
+        interviewRota.GetNextInterviewer().Should().Be("Bob");
+        interviewRota.GetNextInterviewer().Should().Be("Alice");
+    }
 }

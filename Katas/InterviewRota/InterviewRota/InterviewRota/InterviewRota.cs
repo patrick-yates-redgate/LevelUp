@@ -21,8 +21,6 @@ public class InterviewRota
         {
             interviewer.Languages.Add(language);
         }
-        
-        _interviewers.ForEach(x => x.IsAvailable = true);
     }
 
     public void ReportUnavailable(string interviewerName)
@@ -30,11 +28,10 @@ public class InterviewRota
         var interviewer = _interviewers.First(i => i.Name == interviewerName);
         interviewer.IsAvailable = false;
     }
-
+    
     public string GetNextInterviewer(int effort = 1, string? language = null)
     {
         IEnumerable<Interviewer> orderedPairs = _interviewers
-            .Where(interviewer => interviewer.IsAvailable)
             .OrderBy(interviewer => interviewer.ActualEffort + interviewer.PendingEffort);
 
         if (language != null)
@@ -42,9 +39,18 @@ public class InterviewRota
             orderedPairs = orderedPairs.Where(x => x.Languages.Contains(language));
         }
 
-        var interviewer = orderedPairs.FirstOrDefault();
-        interviewer.PendingEffort += effort;
+        foreach (var interviewer in orderedPairs)
+        {
+            if (interviewer.IsAvailable)
+            {
+                interviewer.PendingEffort += effort;
         
-        return interviewer.Name;
+                return interviewer.Name;
+            }
+            
+            interviewer.IsAvailable = true;
+        }
+        
+        throw new Exception("No interviewers available");
     }
 }
