@@ -2,41 +2,49 @@
 
 public class InterviewRota
 {
-    private readonly Dictionary<string, (int actualEffort, int pendingEffort)> _interviewersByTotalEffort = new();
-    private readonly HashSet<string> _unavailableInterviewers = new();
+    private List<Interviewer> _interviewers = new();
 
     public InterviewRota(IEnumerable<string> interviewers)
     {
         foreach (var interviewer in interviewers)
         {
-            _interviewersByTotalEffort[interviewer] = (0, 0);
+            _interviewers.Add(new Interviewer(interviewer));
         }
     }
 
-    public void RecordInterview(string interviewer, int effort = 1)
+    public void RecordInterview(string interviewerName, int effort = 1, string? language = null)
     {
-        var (actualEffort, pendingEffort) = _interviewersByTotalEffort[interviewer];
-        _interviewersByTotalEffort[interviewer] = (actualEffort + effort, pendingEffort - effort);
+        var interviewer = _interviewers.First(i => i.Name == interviewerName);
+        interviewer.ActualEffort += effort;
+
+        if (language != null && !interviewer.Languages.Contains(language))
+        {
+            interviewer.Languages.Add(language);
+        }
         
-        _unavailableInterviewers.Clear();
+        _interviewers.ForEach(x => x.IsAvailable = true);
     }
 
-    public void ReportUnavailable(string interviewer)
+    public void ReportUnavailable(string interviewerName)
     {
-        _unavailableInterviewers.Add(interviewer);
+        var interviewer = _interviewers.First(i => i.Name == interviewerName);
+        interviewer.IsAvailable = false;
     }
 
-    public string GetNextInterviewer(int effort = 1)
+    public string GetNextInterviewer(int effort = 1, string? language = null)
     {
-        var orderedPairs = _interviewersByTotalEffort.Keys
-            .Select(key => (interviewer: key, totalEffort: _interviewersByTotalEffort[key]))
-            .Where(key => !_unavailableInterviewers.Contains(key.interviewer))
-            .OrderBy(tuple => tuple.totalEffort.actualEffort + tuple.totalEffort.pendingEffort);
+        IEnumerable<Interviewer> orderedPairs = _interviewers
+            .Where(interviewer => interviewer.IsAvailable)
+            .OrderBy(interviewer => interviewer.ActualEffort + interviewer.PendingEffort);
+
+        if (language != null)
+        {
+            orderedPairs = orderedPairs.Where(x => x.Languages.Contains(language));
+        }
 
         var interviewer = orderedPairs.FirstOrDefault();
-        var (actualEffort, pendingEffort) = _interviewersByTotalEffort[interviewer.interviewer];
-        _interviewersByTotalEffort[interviewer.interviewer] = (actualEffort, pendingEffort + effort);
-
-        return interviewer.interviewer;
+        interviewer.PendingEffort += effort;
+        
+        return interviewer.Name;
     }
 }

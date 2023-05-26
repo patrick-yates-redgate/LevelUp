@@ -48,4 +48,13 @@ public class Tests
         interviewRota.RecordInterview("Bob");
         interviewRota.GetNextInterviewer().Should().Be("Alice");
     }
+
+    [Test]
+    public void WeCanFilterInterviewersByLanguage()
+    {
+        var interviewRota = new InterviewRota(new List<string> {"Alice", "Bob", "Clive"});
+
+        interviewRota.RecordInterview("Clive", language: "C#");
+        interviewRota.GetNextInterviewer(language: "C#").Should().Be("Clive");
+    }
 }
