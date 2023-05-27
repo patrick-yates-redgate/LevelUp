@@ -34,6 +34,11 @@ public class GameStateReader
             {
                 gameState.CrystalLocations.Add(i);
             }
+            
+            if (type == CellType.Eggs)
+            {
+                gameState.EggLocations.Add(i);
+            }
         }
     }
 
@@ -79,6 +84,11 @@ public class GameStateReader
             if (resources == 0 && gameState.CrystalLocations.Contains(i))
             {
                 gameState.CrystalLocations.Remove(i);
+            }
+            
+            if (resources == 0 && gameState.EggLocations.Contains(i))
+            {
+                gameState.EggLocations.Remove(i);
             }
         }
     }

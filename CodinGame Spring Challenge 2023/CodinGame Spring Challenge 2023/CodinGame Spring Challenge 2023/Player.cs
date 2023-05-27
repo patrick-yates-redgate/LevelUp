@@ -10,60 +10,98 @@ public static class Player
         var gameState = gameStateReader.ReadInitialState();
         var pathFinder = new PathFinder(gameState);
 
+        var strengthToUseForMyCrystals = 2;
+        var strengthToUseForEnemyCrystals = 1;
+
+        var myClosestCost = 0.3f;
+        var enemyClosestCost = 0.7f;
+
+        var crystalInitialCost = 10f;
+        var eggInitialCost = 1f;
+        var crystalAdjustmentEachFrame = -0.5f;
+
+        var crystalCost = crystalInitialCost;
+        var eggCost = eggInitialCost;
+
         // game looping
         while (true)
         {
             gameStateReader.ReadStateUpdate(gameState);
 
-            var hasMoves = false;
-            var myClosestWeight = 0.7;
-            var enemyClosestWeight = 0.3;
-            var strengthToUseForMyCrystals = 2;
-            var strengthToUseForEnemyCrystals = 1;
+            if (gameState.EggLocations.Count == 0)
+            {
+                crystalCost = 1f;
+            }
 
-            var myClosestCrystals = gameState.CrystalLocations
-                .Where(x => gameState.Cells[x].Resources > 0)
-                .Select(crystalIndex => (crystalIndex,
-                    distForMe: pathFinder.ClosestOrDefault(crystalIndex, gameState.MyBases),
-                    distForEnemy: pathFinder.ClosestOrDefault(crystalIndex, gameState.EnemyBases)))
+            //TODO: Have some consideration over the overall game state, i.e. lots of crystals and lots of ants, or few ants and lots of eggs, etc.
+
+            var locationsOfInterest = gameState.CrystalLocations
+                .Select(cellIndex => (cellIndex, cellType: CellType.Crystal))
+                .Concat(gameState.EggLocations.Select(cellIndex => (cellIndex, cellType: CellType.Eggs)));
+
+            var myClosestLocationsOfInterest = locationsOfInterest
+                .Select(location => (
+                    location.cellIndex,
+                    location.cellType,
+                    preferenceCostFactor: location.cellType == CellType.Crystal ? crystalCost : eggCost,
+                    distForMe: pathFinder.ClosestOrDefault(location.cellIndex, gameState.MyBases),
+                    distForEnemy: pathFinder.ClosestOrDefault(location.cellIndex, gameState.EnemyBases)))
                 .Where(x => x.distForMe.index != -1)
                 .Select(
-                    x => (x.crystalIndex,
+                    x => (
+                        x.cellIndex,
+                        x.cellType,
                         baseIndex: x.distForMe.index,
                         closerToEnemy: x.distForEnemy.index > -1 && x.distForEnemy.dist < x.distForMe.dist,
-                        weightedDist: x.distForMe.dist * myClosestWeight + (x.distForEnemy.index > -1 ? 100 : x.distForEnemy.dist) *
-                        enemyClosestWeight)).OrderBy(x => x.weightedDist);
+                        cost: x.preferenceCostFactor * (x.distForMe.dist * myClosestCost +
+                                                        (x.distForEnemy.index > -1 ? 100 : x.distForEnemy.dist) *
+                                                        enemyClosestCost)))
+                .OrderBy(x => -x.cost);
 
-            var hasGoneToOneOfMyCrystals = false;
-            var hasGoneToOneOfEnemyCrystals = false;
-            
-            foreach (var crystal in myClosestCrystals)
+            var myLocationCount = 0;
+            var enemyLocationCount = 0;
+            var crystalsCount = 0;
+            var eggsCount = 0;
+
+            foreach (var location in myClosestLocationsOfInterest)
             {
-                if (crystal.closerToEnemy)
+                if (location.closerToEnemy)
                 {
-                    gameActions.Line(crystal.baseIndex, crystal.crystalIndex, strengthToUseForEnemyCrystals);
-                    hasGoneToOneOfEnemyCrystals = true;
+                    //Don't go to too many enemy locations
+                    if (enemyLocationCount == 0)
+                    {
+                        gameActions.Line(location.baseIndex, location.cellIndex, strengthToUseForEnemyCrystals);
+                        ++enemyLocationCount;   
+                    }
                 }
                 else
                 {
-                    gameActions.Line(crystal.baseIndex, crystal.crystalIndex, strengthToUseForMyCrystals);
-                    hasGoneToOneOfMyCrystals = true;
+                    gameActions.Line(location.baseIndex, location.cellIndex, strengthToUseForMyCrystals);
+                    ++myLocationCount;
                 }
-                
-                if (hasGoneToOneOfEnemyCrystals && hasGoneToOneOfMyCrystals)
+
+                if (location.cellType == CellType.Crystal)
+                {
+                    ++crystalsCount;
+                }
+                else
+                {
+                    ++eggsCount;
+                }
+
+                if (myLocationCount > 0 && enemyLocationCount > 0 && crystalsCount > 0 && eggsCount > 0)
                 {
                     break;
                 }
             }
-
-            if (!hasMoves)
-            {
-                gameActions.Wait();
-            }
+            
+            gameActions.Message($"My Locations: {myLocationCount}, Enemy Locations: {enemyLocationCount}, Crystals: {crystalsCount}, Eggs: {eggsCount}");
 
             // Write an action us Console.WriteLine()
             // To debug: Console.Error.WriteLine("Debug messages...");
             gameActions.FlushMoves();
+
+            crystalCost = Math.Max(1f, crystalCost + crystalAdjustmentEachFrame);
         }
     }
 }

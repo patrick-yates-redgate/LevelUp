@@ -9,4 +9,5 @@ public class GameState
     public List<Cell> Cells { get; set; } = new List<Cell>();
     
     public List<int> CrystalLocations { get; set; } = new List<int>();
+    public List<int> EggLocations { get; set; } = new List<int>();
 }
