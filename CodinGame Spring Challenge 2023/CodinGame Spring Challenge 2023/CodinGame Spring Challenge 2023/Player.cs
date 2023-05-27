@@ -16,21 +16,45 @@ public static class Player
             gameStateReader.ReadStateUpdate(gameState);
 
             var hasMoves = false;
-            
-            foreach (var myBase in gameState.MyBases)
-            {
-                var bestCrystals = gameState.CrystalLocations
-                    .Select(crystalIndex => (crystalIndex, dist: pathFinder.Distance(myBase.CellIndex, crystalIndex)))
-                    .Where(x => x.dist > -1)
-                    .OrderBy(x => x.dist);
+            var myClosestWeight = 0.7;
+            var enemyClosestWeight = 0.3;
+            var strengthToUseForMyCrystals = 2;
+            var strengthToUseForEnemyCrystals = 1;
 
-                if (bestCrystals.Count() > 0)
+            var myClosestCrystals = gameState.CrystalLocations
+                .Select(crystalIndex => (crystalIndex,
+                    distForMe: pathFinder.ClosestOrDefault(crystalIndex, gameState.MyBases),
+                    distForEnemy: pathFinder.ClosestOrDefault(crystalIndex, gameState.EnemyBases)))
+                .Where(x => x.distForMe.index != -1)
+                .Select(
+                    x => (x.crystalIndex,
+                        baseIndex: x.distForMe.index,
+                        closerToEnemy: x.distForEnemy.index > -1 && x.distForEnemy.dist < x.distForMe.dist,
+                        weightedDist: x.distForMe.dist * myClosestWeight + (x.distForEnemy.index > -1 ? 100 : x.distForEnemy.dist) *
+                        enemyClosestWeight)).OrderBy(x => x.weightedDist);
+
+            var hasGoneToOneOfMyCrystals = false;
+            var hasGoneToOneOfEnemyCrystals = false;
+            
+            foreach (var crystal in myClosestCrystals)
+            {
+                if (crystal.closerToEnemy)
                 {
-                    gameActions.Line(myBase.CellIndex, bestCrystals.First().crystalIndex, 1);
-                    hasMoves = true;
+                    gameActions.Line(crystal.baseIndex, crystal.crystalIndex, strengthToUseForEnemyCrystals);
+                    hasGoneToOneOfEnemyCrystals = true;
+                }
+                else
+                {
+                    gameActions.Line(crystal.baseIndex, crystal.crystalIndex, strengthToUseForMyCrystals);
+                    hasGoneToOneOfMyCrystals = true;
+                }
+                
+                if (hasGoneToOneOfEnemyCrystals && hasGoneToOneOfMyCrystals)
+                {
+                    break;
                 }
             }
-             
+
             if (!hasMoves)
             {
                 gameActions.Wait();
