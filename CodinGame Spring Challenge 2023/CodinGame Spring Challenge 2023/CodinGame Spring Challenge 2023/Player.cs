@@ -22,6 +22,7 @@ public static class Player
             var strengthToUseForEnemyCrystals = 1;
 
             var myClosestCrystals = gameState.CrystalLocations
+                .Where(x => gameState.Cells[x].Resources > 0)
                 .Select(crystalIndex => (crystalIndex,
                     distForMe: pathFinder.ClosestOrDefault(crystalIndex, gameState.MyBases),
                     distForEnemy: pathFinder.ClosestOrDefault(crystalIndex, gameState.EnemyBases)))
