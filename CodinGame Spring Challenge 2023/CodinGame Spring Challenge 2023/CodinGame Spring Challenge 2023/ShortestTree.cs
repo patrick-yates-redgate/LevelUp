@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodinGame_Spring_Challenge_2023
 {
@@ -22,7 +23,7 @@ namespace CodinGame_Spring_Challenge_2023
                 unvisited.Add(index);
             }
             
-            var currentCellIndex = 0;
+            var currentCellIndex = unvisited.First();
             visited.Add(currentCellIndex);
             unvisited.Remove(currentCellIndex);
             
