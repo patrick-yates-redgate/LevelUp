@@ -13,7 +13,12 @@ public class GameState
     
     public List<int> MyBaseLocations { get; set; } = new List<int>();
     public List<int> EnemyBaseLocations { get; set; } = new List<int>();
-    public List<int> CellLocations { get; set; } = new List<int>();
     public List<int> CrystalLocations { get; set; } = new List<int>();
     public List<int> EggLocations { get; set; } = new List<int>();
+    public List<int> MyCrystalLocations { get; set; } = new List<int>();
+    public List<int> EnemyCrystalLocations { get; set; } = new List<int>();
+    public List<int> MyEggLocations { get; set; } = new List<int>();
+    public List<int> EnemyEggLocations { get; set; } = new List<int>();
+    public List<int> ContestedCrystalLocations { get; set; } = new List<int>();
+    public List<int> ContestedEggLocations { get; set; } = new List<int>();
 }

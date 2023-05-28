@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,11 +8,14 @@ public class PathFinder
 
     private readonly List<Dictionary<int, (int dir, int dist)>> _cellPathMap = new List<Dictionary<int, (int dir, int dist)>>();
 
-    private bool _fullyExpanded = false;
+    private bool _fullyExpanded;
+    
+    private Action _onPathExpansionComplete;
 
     public PathFinder(GameState gameState)
     {
         _numCells = gameState.NumberOfCells;
+        _onPathExpansionComplete = () => {};
 
         BuildPathInfo(gameState);
     }
@@ -20,11 +24,17 @@ public class PathFinder
     {
         _numCells = numCells;
         _cellPathMap = cellPathMap;
+        _onPathExpansionComplete = () => {};
     }
 
-    public void ExpandPathKnowledge()
+    public void OnPathExpansionComplete(Action action)
     {
-        if (_fullyExpanded) return;
+        _onPathExpansionComplete = action;
+    }
+
+    public bool ExpandPathKnowledge()
+    {
+        if (_fullyExpanded) return true;
 
         var newPathsFound = new List<(int from, int fromDir, int to, int toDir, int dist)>();
 
@@ -61,7 +71,8 @@ public class PathFinder
         if (newPathsFound.Count == 0)
         {
             _fullyExpanded = true;
-            return;
+            _onPathExpansionComplete();
+            return true;
         }
 
         foreach (var newPath in newPathsFound)
@@ -69,6 +80,8 @@ public class PathFinder
             _cellPathMap[newPath.from][newPath.to] = (newPath.fromDir, newPath.dist);
             _cellPathMap[newPath.to][newPath.from] = (newPath.toDir, newPath.dist);
         }
+
+        return false;
     }
 
 
@@ -156,6 +169,31 @@ public class PathFinder
 
         path.Add(toIndex);
         return path;
+    }
+    
+    public IEnumerable<int> ClosestNOf(GameState gameState, int num, params IEnumerable<int>[] indexLists)
+    {
+        var closest = new List<int>();
+        var closestDistances = new List<int>();
+        foreach (var indexList in indexLists)
+        {
+            foreach (var index in indexList)
+            {
+                var dist = Distance(gameState.MyBases[0].CellIndex, index);
+                if (dist == -1) continue;
+
+                var indexToInsertAt = closestDistances.FindIndex(d => d > dist);
+                if (indexToInsertAt == -1)
+                {
+                    indexToInsertAt = closest.Count;
+                }
+
+                closest.Insert(indexToInsertAt, index);
+                closestDistances.Insert(indexToInsertAt, dist);
+            }
+        }
+
+        return closest.Take(num);
     }
 
     public string DebugDistances(GameState gameState)
