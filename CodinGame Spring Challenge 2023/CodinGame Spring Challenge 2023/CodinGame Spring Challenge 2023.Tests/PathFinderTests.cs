@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodinGame_Spring_Challenge_2023.Core;
+using CodinGame_Spring_Challenge_2023.Domain;
+using CodinGame_Spring_Challenge_2023.PathFinding;
 using FluentAssertions;
 using NUnit.Framework;
 

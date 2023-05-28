@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CodinGame_Spring_Challenge_2023
+namespace CodinGame_Spring_Challenge_2023.PathFinding
 {
     public class ShortestTree
     {

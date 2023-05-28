@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+namespace CodinGame_Spring_Challenge_2023.Core;
+
 public class GameActions
 {
     private const bool ShowDebug = true;

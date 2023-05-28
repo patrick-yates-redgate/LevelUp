@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
-using CodinGame_Spring_Challenge_2023;
+using CodinGame_Spring_Challenge_2023.Core;
+using CodinGame_Spring_Challenge_2023.PathFinding;
+
+namespace CodinGame_Spring_Challenge_2023;
 
 public static class Player
 {
@@ -51,28 +54,28 @@ public static class Player
             // MUST TRIM THE NODES BEFORE WE PASS IN HERE, NOT AFTER
 
             /*
-            shortestTree.GetShortestTree(locations)
-                .ToList()
-                .ForEach(x =>
+        shortestTree.GetShortestTree(locations)
+            .ToList()
+            .ForEach(x =>
+            {
+                var dist = pathFinder.Distance(x.fromIndex, x.toIndex);
+                var isEgg = eggs.Contains(x.toIndex) || eggs.Contains(x.fromIndex);
+                if (isEgg)
                 {
-                    var dist = pathFinder.Distance(x.fromIndex, x.toIndex);
-                    var isEgg = eggs.Contains(x.toIndex) || eggs.Contains(x.fromIndex);
-                    if (isEgg)
+                    var strength = 3 - dist;
+                    if (strength > 0)
                     {
-                        var strength = 3 - dist;
-                        if (strength > 0)
-                        {
-                            gameActions.Line(x.fromIndex, x.toIndex, strength * 10);
-                        }
-
-                        return;
+                        gameActions.Line(x.fromIndex, x.toIndex, strength * 10);
                     }
 
-                    var isMyCrystal = gameState.MyCrystalLocations.Contains(x.toIndex) ||
-                                      gameState.MyCrystalLocations.Contains(x.fromIndex);
-                    gameActions.Line(x.fromIndex, x.toIndex, isMyCrystal ? 6 : 2);
-                });
-                */
+                    return;
+                }
+
+                var isMyCrystal = gameState.MyCrystalLocations.Contains(x.toIndex) ||
+                                  gameState.MyCrystalLocations.Contains(x.fromIndex);
+                gameActions.Line(x.fromIndex, x.toIndex, isMyCrystal ? 6 : 2);
+            });
+            */
 
             gameActions.FlushMoves();
         }

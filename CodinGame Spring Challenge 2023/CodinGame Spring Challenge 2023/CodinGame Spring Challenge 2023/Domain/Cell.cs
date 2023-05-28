@@ -1,4 +1,6 @@
 
+namespace CodinGame_Spring_Challenge_2023.Domain;
+
 public class Cell
 {
     public CellType CellType { get; set; }

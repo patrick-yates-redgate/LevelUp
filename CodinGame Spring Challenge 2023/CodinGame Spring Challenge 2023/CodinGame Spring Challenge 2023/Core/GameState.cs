@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using CodinGame_Spring_Challenge_2023.Domain;
+
+namespace CodinGame_Spring_Challenge_2023.Core;
 
 public class GameState
 {

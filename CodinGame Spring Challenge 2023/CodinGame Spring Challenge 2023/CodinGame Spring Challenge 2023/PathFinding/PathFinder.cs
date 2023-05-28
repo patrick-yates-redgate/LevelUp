@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodinGame_Spring_Challenge_2023.Core;
+
+namespace CodinGame_Spring_Challenge_2023.PathFinding;
 
 public class PathFinder
 {
@@ -103,28 +106,28 @@ public class PathFinder
         }
     }
     /*
-    for (var i = 0; i < _gameState.NumberOfCells; ++i)
+for (var i = 0; i < _gameState.NumberOfCells; ++i)
+    {
+        var cell = _gameState.Cells[i];
+        var pathsForCell = _cellPathMap[i];
+
+        foreach (var pathToIndex in pathsForCell.Keys)
         {
-            var cell = _gameState.Cells[i];
-            var pathsForCell = _cellPathMap[i];
-
-            foreach (var pathToIndex in pathsForCell.Keys)
+            var knownCell = _gameState.Cells[pathToIndex];
+            var pathsForKnownCell = _cellPathMap[pathToIndex];
+            foreach (var otherPathToIndex in pathsForCell.Keys)
             {
-                var knownCell = _gameState.Cells[pathToIndex];
-                var pathsForKnownCell = _cellPathMap[pathToIndex];
-                foreach (var otherPathToIndex in pathsForCell.Keys)
-                {
-                    if (pathToIndex == otherPathToIndex) continue;
+                if (pathToIndex == otherPathToIndex) continue;
 
-                    if (!pathsForKnownCell.ContainsKey(otherPathToIndex))
-                    {
-                        pathsForKnownCell[otherPathToIndex] = pathsForCell[pathToIndex].
-                    }   
-                }
+                if (!pathsForKnownCell.ContainsKey(otherPathToIndex))
+                {
+                    pathsForKnownCell[otherPathToIndex] = pathsForCell[pathToIndex].
+                }   
             }
         }
     }
-    */
+}
+*/
 
     public IOrderedEnumerable<(int index, int dist)> ClosestDistances(int fromIndex, IEnumerable<int> toIndexList) =>
         toIndexList.Select(index => (index: index, dist: Distance(fromIndex, index))).Where((_, dist) => dist > -1)

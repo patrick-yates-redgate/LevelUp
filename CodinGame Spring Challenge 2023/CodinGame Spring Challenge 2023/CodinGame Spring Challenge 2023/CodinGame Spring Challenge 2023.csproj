@@ -40,20 +40,21 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Base.cs" />
-        <Compile Include="Cell.cs" />
-        <Compile Include="CellType.cs" />
-        <Compile Include="Crystal.cs" />
-        <Compile Include="Egg.cs" />
-        <Compile Include="GameActions.cs" />
-        <Compile Include="GameState.cs" />
-        <Compile Include="GameStateReader.cs" />
-        <Compile Include="IHaveCellIndex.cs" />
-        <Compile Include="PathFinder.cs" />
+        <Compile Include="Domain\Base.cs" />
+        <Compile Include="Domain\Cell.cs" />
+        <Compile Include="Domain\CellType.cs" />
+        <Compile Include="Domain\Crystal.cs" />
+        <Compile Include="Domain\Egg.cs" />
+        <Compile Include="Domain\IHaveCellIndex.cs" />
+        <Compile Include="Core\GameActions.cs" />
+        <Compile Include="Core\GameState.cs" />
+        <Compile Include="Core\GameStateReader.cs" />
+        <Compile Include="PathFinding\PathFinder.cs" />
+        <Compile Include="PathFinding\ShortestTree.cs" />
+        <Compile Include="PathFinding\ShortestTreeWalker.cs" />
         <Compile Include="Player.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="ShortestTree.cs" />
-        <Compile Include="ShortestTreeWalker.cs" />
+        <Compile Include="Strategy\StrategyCostBenefitAnalysis.cs" />
     </ItemGroup>
     <ItemGroup>
       <Content Include="all_source_combined.txt" />

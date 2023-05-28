@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodinGame_Spring_Challenge_2023.Core;
 
-namespace CodinGame_Spring_Challenge_2023
+namespace CodinGame_Spring_Challenge_2023.PathFinding
 {
     public static class ShortestTreeWalker
     {
