@@ -1,34 +1,34 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Path
-{
-    public List<int> Steps { get; set; }
-    public int Distance => Steps.Count + 1;
-}
-
 public class PathFinder
 {
-    private GameState _gameState;
+    private readonly int _numCells;
 
-    private List<Dictionary<int, (int dir, int dist)>> _cellPathMap = new List<Dictionary<int, (int dir, int dist)>>();
+    private readonly List<Dictionary<int, (int dir, int dist)>> _cellPathMap = new List<Dictionary<int, (int dir, int dist)>>();
 
-    private bool fullyExpanded = false;
+    private bool _fullyExpanded = false;
 
     public PathFinder(GameState gameState)
     {
-        _gameState = gameState;
+        _numCells = gameState.NumberOfCells;
 
-        BuildPathInfo();
+        BuildPathInfo(gameState);
+    }
+
+    public PathFinder(List<Dictionary<int, (int dir, int dist)>> cellPathMap, int numCells)
+    {
+        _numCells = numCells;
+        _cellPathMap = cellPathMap;
     }
 
     public void ExpandPathKnowledge()
     {
-        if (fullyExpanded) return;
+        if (_fullyExpanded) return;
 
         var newPathsFound = new List<(int from, int fromDir, int to, int toDir, int dist)>();
 
-        for (var i = 0; i < _gameState.NumberOfCells; ++i)
+        for (var i = 0; i < _numCells; ++i)
         {
             var pathsForCell = _cellPathMap[i];
 
@@ -44,7 +44,7 @@ public class PathFinder
 
                     if (pathsForCell.TryGetValue(otherCellIndex, out var myCurrentBestPathToOtherCell))
                     {
-                        if (myCurrentBestPathToOtherCell.dist < possibleDistViaKnownCell)
+                        if (myCurrentBestPathToOtherCell.dist <= possibleDistViaKnownCell)
                         {
                             continue;
                         }
@@ -60,7 +60,7 @@ public class PathFinder
 
         if (newPathsFound.Count == 0)
         {
-            fullyExpanded = true;
+            _fullyExpanded = true;
             return;
         }
 
@@ -72,14 +72,14 @@ public class PathFinder
     }
 
 
-    private void BuildPathInfo()
+    private void BuildPathInfo(GameState gameState)
     {
-        for (var i = 0; i < _gameState.NumberOfCells; ++i)
+        for (var i = 0; i < gameState.NumberOfCells; ++i)
         {
             var pathsForCell = new Dictionary<int, (int dir, int dist)>();
             _cellPathMap.Add(pathsForCell);
 
-            var cell = _gameState.Cells[i];
+            var cell = gameState.Cells[i];
             for (var dir = 0; dir < 6; ++dir)
             {
                 var neighbourIndex = cell.Neighbours[dir];
@@ -138,7 +138,7 @@ public class PathFinder
         return -1;
     }
     
-    public IEnumerable<int> PathTo(int fromIndex, int toIndex)
+    public IEnumerable<int> PathTo(GameState gameState, int fromIndex, int toIndex)
     {
         if (!_cellPathMap[fromIndex].ContainsKey(toIndex))
         {
@@ -151,7 +151,7 @@ public class PathFinder
         {
             path.Add(currentCellIndex);
             var nextCellDir = _cellPathMap[currentCellIndex][toIndex].dir;
-            currentCellIndex = _gameState.Cells[currentCellIndex].Neighbours[nextCellDir];
+            currentCellIndex = gameState.Cells[currentCellIndex].Neighbours[nextCellDir];
         }
 
         path.Add(toIndex);
@@ -190,7 +190,7 @@ public class PathFinder
         {
             foreach (var crystal in gameState.CrystalLocations)
             {
-                var path = PathTo(myBase.CellIndex, crystal);
+                var path = PathTo(gameState,myBase.CellIndex, crystal);
                 output += $"(Base({myBase.CellIndex}) -> Crystal({crystal}) : ";
                 foreach (var step in path)
                 {
@@ -204,7 +204,7 @@ public class PathFinder
         {
             foreach (var crystal in gameState.CrystalLocations)
             {
-                var path = PathTo(enemyBase.CellIndex, crystal);
+                var path = PathTo(gameState, enemyBase.CellIndex, crystal);
                 output += $"(Base({enemyBase.CellIndex}) -> Crystal({crystal}) : ";
                 foreach (var step in path)
                 {

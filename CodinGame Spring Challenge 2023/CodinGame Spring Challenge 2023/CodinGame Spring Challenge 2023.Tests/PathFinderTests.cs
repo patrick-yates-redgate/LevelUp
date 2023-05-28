@@ -90,5 +90,98 @@ namespace CodinGame_Spring_Challenge_2023.Tests
             pathFinder.ExpandPathKnowledge();
             pathFinder.Distance(3, 4).Should().Be(3);
         }
+
+        /*
+         *          0
+         *        1   2
+         *
+         * Commented out, this shouldn't be a valid scenario seeing as the base state establishes direct neighbours
+        [Test]
+        public void ThatIfWeHaveAnInefficientPathThenWeWillCorrectThroughExpansion()
+        {
+            var cellPathMap = new List<Dictionary<int, (int dir, int dist)>> {
+                new Dictionary<int, (int dir, int dist)>
+                {
+                    [1] = (4, 1),
+                    [2] = (4, 2) //Inefficient, it should go direct to 2 in dir 5
+                },
+                new Dictionary<int, (int dir, int dist)>
+                {
+                    [0] = (1, 1),
+                    [2] = (0, 1)
+                },
+                new Dictionary<int, (int dir, int dist)>
+                {
+                    [0] = (2, 1),
+                    [1] = (3, 1)
+                }
+            };
+
+            var pathFinder = new PathFinder(cellPathMap, 3);
+            
+            pathFinder.Distance(0, 2).Should().Be(2); //Initial state
+            pathFinder.ExpandPathKnowledge();
+            pathFinder.Distance(0, 2).Should().Be(1); //After expansion
+        }
+         */
+        
+        
+        /*
+         *          0   1
+         *        2   3   4
+         */
+        [Test]
+        public void ThatIfWeHaveAnInefficientPathThenWeWillCorrectThroughExpansion()
+        {
+            var cellPathMap = new List<Dictionary<int, (int dir, int dist)>> {
+                new Dictionary<int, (int dir, int dist)>
+                {
+                    [1] = (0, 1),
+                    [2] = (4, 1),
+                    [3] = (5, 1),
+                    [4] = (1, 2)
+                },
+                new Dictionary<int, (int dir, int dist)>
+                {
+                    [0] = (3, 1),
+                    [3] = (4, 1),
+                    [4] = (5, 1),
+                    [2] = (3, 2)
+                },
+                new Dictionary<int, (int dir, int dist)>
+                {
+                    [0] = (1, 1),
+                    [3] = (0, 1),
+                    [1] = (1, 2),
+                    [4] = (1, 3) //Inefficient, it should go direct to 2 in dir 5 (dist 2)
+                },
+                new Dictionary<int, (int dir, int dist)>
+                {
+                    [0] = (2, 1),
+                    [1] = (1, 1),
+                    [2] = (3, 1),
+                    [4] = (0, 1)
+                },
+                new Dictionary<int, (int dir, int dist)>
+                {
+                    [1] = (2, 2),
+                    [3] = (3, 3),
+                    [0] = (2, 2),
+                    [2] = (2, 3) //Inefficient, it should go direct to 2 in dir 3 (dist 2)
+                }
+            };
+
+            var pathFinder = new PathFinder(cellPathMap, 5);
+            
+            //Initial state
+            pathFinder.Distance(2, 4).Should().Be(3);
+            pathFinder.Distance(4, 2).Should().Be(3);
+            
+            pathFinder.ExpandPathKnowledge();
+            
+            //After expansion
+            pathFinder.Distance(2, 4).Should().Be(2); //Initial state
+            pathFinder.Distance(4, 2).Should().Be(2); //Initial state
+        }
     }
 }
