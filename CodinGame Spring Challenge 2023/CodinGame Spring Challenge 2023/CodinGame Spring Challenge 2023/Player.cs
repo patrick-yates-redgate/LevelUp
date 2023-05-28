@@ -27,6 +27,8 @@ public static class Player
         while (true)
         {
             gameStateReader.ReadStateUpdate(gameState);
+            pathFinder.ExpandPathKnowledge();
+            Console.Error.WriteLine(pathFinder.DebugPaths(gameState));
 
             if (gameState.EggLocations.Count == 0)
             {
@@ -44,8 +46,8 @@ public static class Player
                     location.cellIndex,
                     location.cellType,
                     preferenceCostFactor: location.cellType == CellType.Crystal ? crystalCost : eggCost,
-                    distForMe: pathFinder.ClosestOrDefault(location.cellIndex, gameState.MyBases),
-                    distForEnemy: pathFinder.ClosestOrDefault(location.cellIndex, gameState.EnemyBases)))
+                    distForMe: pathFinder.ClosestOrDefault(location.cellIndex, gameState.MyBaseLocations),
+                    distForEnemy: pathFinder.ClosestOrDefault(location.cellIndex, gameState.EnemyBaseLocations)))
                 .Where(x => x.distForMe.index != -1)
                 .Select(
                     x => (

@@ -63,5 +63,32 @@ namespace CodinGame_Spring_Challenge_2023.Tests
             pathFinder.ExpandPathKnowledge();
             pathFinder.Distance(0, 2).Should().Be(2);
         }
+
+        /*
+            |0|
+         |1|2|3|
+        |4|5|6|
+        
+        Distance from 3 to 4 is 3 but we are seeing 4 in the current code
+        */
+        [Test]
+        public void ThatASpecificScenarioWithMultipleRoutesIsCalculatedCorrectly()
+        {
+            var gameState = BuildGameState(
+                BuildCell((4, 2), (5, 3)),
+                BuildCell((0, 2), (4, 4), (5, 5)),
+                BuildCell((0, 3), (1, 0), (3, 1), (4, 5), (5, 6)),
+                BuildCell((2, 0), (3, 2), (4, 6)),
+                BuildCell((0, 5), (1, 1)),
+                BuildCell((0, 6), (1, 2), (2, 1), (3, 4)),
+                BuildCell((1, 3), (2, 2), (3, 5))
+                );
+            
+            var pathFinder = new PathFinder(gameState);
+            pathFinder.ExpandPathKnowledge();
+            pathFinder.ExpandPathKnowledge();
+            pathFinder.ExpandPathKnowledge();
+            pathFinder.Distance(3, 4).Should().Be(3);
+        }
     }
 }

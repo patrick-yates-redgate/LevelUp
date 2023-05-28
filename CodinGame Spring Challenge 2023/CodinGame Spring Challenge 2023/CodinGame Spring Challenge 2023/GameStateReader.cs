@@ -32,11 +32,13 @@ public class GameStateReader
             
             if (type == CellType.Crystal)
             {
+                gameState.Crystals.Add(new Crystal { CellIndex = i });
                 gameState.CrystalLocations.Add(i);
             }
             
             if (type == CellType.Eggs)
             {
+                gameState.Eggs.Add(new Egg { CellIndex = i });
                 gameState.EggLocations.Add(i);
             }
         }
@@ -47,12 +49,14 @@ public class GameStateReader
         gameState.NumberOfBasesPerPlayer = int.Parse(Console.ReadLine());
     }
 
-    private void ReadBases(GameState gameState, ICollection<Base> bases)
+    private void ReadBases(GameState gameState, ICollection<Base> bases, ICollection<int> baseLocations)
     {
         var inputs = Console.ReadLine().Split(' ');
         for (var i = 0; i < gameState.NumberOfBasesPerPlayer; i++)
         {
-            bases.Add(new Base() { CellIndex = int.Parse(inputs[i]) });
+            var baseIndex = int.Parse(inputs[i]);
+            bases.Add(new Base { CellIndex = baseIndex });
+            baseLocations.Add(baseIndex);
         }
     }
 
@@ -62,8 +66,8 @@ public class GameStateReader
         ReadNumberOfCells(gameState);
         ReadInitialCellState(gameState);
         ReadNumberOfBases(gameState);
-        ReadBases(gameState, gameState.MyBases);
-        ReadBases(gameState, gameState.EnemyBases);
+        ReadBases(gameState, gameState.MyBases, gameState.MyBaseLocations);
+        ReadBases(gameState, gameState.EnemyBases, gameState.EnemyBaseLocations);
 
         return gameState;
     }
@@ -84,11 +88,13 @@ public class GameStateReader
             if (resources == 0 && gameState.CrystalLocations.Contains(i))
             {
                 gameState.CrystalLocations.Remove(i);
+                gameState.Crystals.RemoveAll(x => x.CellIndex == i);
             }
             
             if (resources == 0 && gameState.EggLocations.Contains(i))
             {
                 gameState.EggLocations.Remove(i);
+                gameState.Eggs.RemoveAll(x => x.CellIndex == i);
             }
         }
     }

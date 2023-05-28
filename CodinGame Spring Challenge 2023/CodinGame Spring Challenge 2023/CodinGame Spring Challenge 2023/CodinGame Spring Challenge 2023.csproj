@@ -42,6 +42,8 @@
         <Compile Include="Base.cs" />
         <Compile Include="Cell.cs" />
         <Compile Include="CellType.cs" />
+        <Compile Include="Crystal.cs" />
+        <Compile Include="Egg.cs" />
         <Compile Include="GameActions.cs" />
         <Compile Include="GameState.cs" />
         <Compile Include="GameStateReader.cs" />

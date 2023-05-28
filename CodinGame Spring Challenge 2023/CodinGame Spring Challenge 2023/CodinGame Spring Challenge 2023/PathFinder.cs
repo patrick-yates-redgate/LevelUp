@@ -113,11 +113,11 @@ public class PathFinder
     }
     */
 
-    public IOrderedEnumerable<(int index, int dist)> ClosestDistances(int fromIndex, IEnumerable<IHaveCellIndex> toIndexList) =>
-        toIndexList.Select(index => (index: index.CellIndex, dist: Distance(fromIndex, index.CellIndex))).Where((_, dist) => dist > -1)
+    public IOrderedEnumerable<(int index, int dist)> ClosestDistances(int fromIndex, IEnumerable<int> toIndexList) =>
+        toIndexList.Select(index => (index: index, dist: Distance(fromIndex, index))).Where((_, dist) => dist > -1)
             .OrderBy(x => x.dist);
 
-    public (int index, int dist) ClosestOrDefault(int fromIndex, IEnumerable<IHaveCellIndex> toIndexList)
+    public (int index, int dist) ClosestOrDefault(int fromIndex, IEnumerable<int> toIndexList)
     {
         var closestDistances = ClosestDistances(fromIndex, toIndexList);
         if (closestDistances.Any())
@@ -136,5 +136,83 @@ public class PathFinder
         }
 
         return -1;
+    }
+    
+    public IEnumerable<int> PathTo(int fromIndex, int toIndex)
+    {
+        if (!_cellPathMap[fromIndex].ContainsKey(toIndex))
+        {
+            return Enumerable.Empty<int>();
+        }
+        
+        var path = new List<int>();
+        var currentCellIndex = fromIndex;
+        while (currentCellIndex != toIndex)
+        {
+            path.Add(currentCellIndex);
+            var nextCellDir = _cellPathMap[currentCellIndex][toIndex].dir;
+            currentCellIndex = _gameState.Cells[currentCellIndex].Neighbours[nextCellDir];
+        }
+
+        path.Add(toIndex);
+        return path;
+    }
+
+    public string DebugDistances(GameState gameState)
+    {
+        var output = "Distances from my base: ";
+        foreach (var myBase in gameState.MyBases)
+        {
+            var crystalDistances = ClosestDistances(myBase.CellIndex, gameState.CrystalLocations);
+            foreach (var crystal in crystalDistances)
+            {
+                output += $"({crystal.index}, {crystal.dist}) ";
+            }
+        }
+        
+        output += " Distances from enemy base: ";
+        foreach (var enemyBase in gameState.EnemyBases)
+        {
+            var crystalDistances = ClosestDistances(enemyBase.CellIndex, gameState.CrystalLocations);
+            foreach (var crystal in crystalDistances)
+            {
+                output += $"({crystal.index}, {crystal.dist}) ";
+            }
+        }
+
+        return output;
+    }
+
+    public string DebugPaths(GameState gameState)
+    {
+        var output = "Paths from my base: ";
+        foreach (var myBase in gameState.MyBases)
+        {
+            foreach (var crystal in gameState.CrystalLocations)
+            {
+                var path = PathTo(myBase.CellIndex, crystal);
+                output += $"(Base({myBase.CellIndex}) -> Crystal({crystal}) : ";
+                foreach (var step in path)
+                {
+                    output += step + " ";
+                }
+            }
+        }
+        
+        output += " Paths from enemy base: ";
+        foreach (var enemyBase in gameState.EnemyBases)
+        {
+            foreach (var crystal in gameState.CrystalLocations)
+            {
+                var path = PathTo(enemyBase.CellIndex, crystal);
+                output += $"(Base({enemyBase.CellIndex}) -> Crystal({crystal}) : ";
+                foreach (var step in path)
+                {
+                    output += step + " ";
+                }
+            }
+        }
+
+        return output;
     }
 }
