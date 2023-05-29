@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodinGame_Spring_Challenge_2023.Domain;
 using CodinGame_Spring_Challenge_2023.PathFinding;
+using CodinGame_Spring_Challenge_2023.Utils;
 
 namespace CodinGame_Spring_Challenge_2023.Core;
 
@@ -132,24 +133,18 @@ public static class GameStateReader
 
     public static void DetermineOwnership(GameState gameState, PathFinder pathFinder)
     {
-        var crystalContention = gameState.CrystalLocations.Select(index =>
-        {
-            var closestEnemyBase = pathFinder.ClosestOrDefault(index, gameState.EnemyBaseLocations);
-            if (closestEnemyBase.index == -1)
-            {
-                return (index, isContested: true, isMine: false);
-            }
+        var crystalContention = gameState.CrystalLocations.Select(index => pathFinder
+            .ClosestOrDefault(index, gameState.EnemyBaseLocations)
+            .Match(
+                closestEnemyBase => pathFinder
+                    .ClosestOrDefault(index, gameState.MyBaseLocations)
+                    .Match(
+                        closestMyBase => (index, isContested: closestEnemyBase.dist == closestMyBase.dist,
+                            isMine: closestMyBase.dist < closestEnemyBase.dist),
+                        _ => (index, isContested: true, isMine: false)
+                    ),
+                _ => (index, isContested: true, isMine: false)));
 
-            var closestMyBase = pathFinder.ClosestOrDefault(index, gameState.MyBaseLocations);
-            if (closestMyBase.index == -1)
-            {
-                return (index, isContested: true, isMine: false);
-            }
-
-            return (index, isContested: closestEnemyBase.dist == closestMyBase.dist,
-                isMine: closestMyBase.dist < closestEnemyBase.dist);
-        });
-        
         foreach (var (index, isContested, isMine) in crystalContention)
         {
             if (isContested)
@@ -165,24 +160,18 @@ public static class GameStateReader
                 gameState.EnemyCrystalLocations.Add(index);
             }
         }
-        
-        var eggContention = gameState.EggLocations.Select(index =>
-        {
-            var closestEnemyBase = pathFinder.ClosestOrDefault(index, gameState.EnemyBaseLocations);
-            if (closestEnemyBase.index == -1)
-            {
-                return (index, isContested: true, isMine: false);
-            }
 
-            var closestMyBase = pathFinder.ClosestOrDefault(index, gameState.MyBaseLocations);
-            if (closestMyBase.index == -1)
-            {
-                return (index, isContested: true, isMine: false);
-            }
-
-            return (index, isContested: closestEnemyBase.dist == closestMyBase.dist,
-                isMine: closestMyBase.dist < closestEnemyBase.dist);
-        });
+        var eggContention = gameState.EggLocations.Select(index => pathFinder
+            .ClosestOrDefault(index, gameState.EnemyBaseLocations)
+            .Match(
+                closestEnemyBase => pathFinder
+                    .ClosestOrDefault(index, gameState.MyBaseLocations)
+                    .Match(
+                        closestMyBase => (index, isContested: closestEnemyBase.dist == closestMyBase.dist,
+                            isMine: closestMyBase.dist < closestEnemyBase.dist),
+                        _ => (index, isContested: true, isMine: false)
+                    ),
+                _ => (index, isContested: true, isMine: false)));
         
         foreach (var (index, isContested, isMine) in eggContention)
         {

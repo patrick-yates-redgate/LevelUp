@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodinGame_Spring_Challenge_2023.Core;
 using CodinGame_Spring_Challenge_2023.Domain;
+using CodinGame_Spring_Challenge_2023.Utils;
 
 namespace CodinGame_Spring_Challenge_2023.PathFinding;
 
@@ -135,7 +136,7 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
         toIndexList.Select(index => (index: index, dist: Distance(fromIndex, index))).Where((_, dist) => dist > -1)
             .OrderBy(x => x.dist);
 
-    public (int index, int dist) ClosestOrDefault(int fromIndex, IEnumerable<int> toIndexList)
+    public OneOf<(int index, int dist), NotFound> ClosestOrDefault(int fromIndex, IEnumerable<int> toIndexList)
     {
         var closestDistances = ClosestDistances(fromIndex, toIndexList);
         if (closestDistances.Any())
@@ -143,7 +144,7 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
             return closestDistances.First();
         }
 
-        return (-1, -1);
+        return new NotFound();
     }
 
     public int Distance(int fromIndex, int toIndex)

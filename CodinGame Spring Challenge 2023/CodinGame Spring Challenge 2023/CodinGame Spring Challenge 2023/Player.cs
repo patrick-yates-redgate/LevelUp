@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodinGame_Spring_Challenge_2023.Core;
 using CodinGame_Spring_Challenge_2023.PathFinding;
+using CodinGame_Spring_Challenge_2023.Strategy;
 
 namespace CodinGame_Spring_Challenge_2023;
 
@@ -15,6 +16,7 @@ public static class Player
         var pathFinder = new PathFinder(gameState);
         var shortestTree = new ShortestTree(pathFinder);
         var mapInfo = new MapInfo(gameState, pathFinder);
+        var strategyCostBenefitAdaptive = new StrategyCostBenefitAdaptive(gameState, pathFinder, mapInfo, shortestTree);
         
         pathFinder.OnPathExpansionComplete(() =>
         {
@@ -40,6 +42,12 @@ public static class Player
             GameStateReader.ReadStateUpdate(gameState);
             pathFinder.ExpandPathKnowledge();
 
+            foreach (var index in strategyCostBenefitAdaptive.Update())
+            {
+                gameActions.Beacon(index, 1);
+            }
+            
+            /*
             currentlyVisiting.RemoveAll(index => gameState.Cells[index].Resources == 0);
             
             if (currentlyVisiting.Count == 0)
@@ -74,11 +82,7 @@ public static class Player
             }.SelectMany(x => x).ToList();
 
             Console.Error.WriteLine(string.Join(",", locations.Select(x => x.ToString())));
-
-            foreach (var index in ShortestTreeWalker.WalkShortestTree(gameState, pathFinder, shortestTree.GetShortestTree(locations)))
-            {
-                gameActions.Beacon(index, 1);
-            }
+*/
 
             // MUST TRIM THE NODES BEFORE WE PASS IN HERE, NOT AFTER
 

@@ -20,6 +20,8 @@ public class MapInfo
     
     public void UpdateStatic()
     {
+        if (CellMapInfoStatic.Count > 0) return;
+        
         for (var i = 0; i < _gameState.NumberOfCells; ++i)
         {
             var cellMapInfoStatic = new CellMapInfoStatic
@@ -41,12 +43,21 @@ public class MapInfo
             }
             
             CellMapInfoStatic.Add(cellMapInfoStatic);
+            CellMapInfoDynamic.Add(new CellMapInfoDynamic());
         }
     }
     
     public void UpdateDynamic()
     {
-        
+        for (var i = 0; i < _gameState.NumberOfCells; ++i)
+        {
+            CellMapInfoDynamic[i].Resources = _gameState.Cells[i].Resources;
+        }
+    }
+    
+    public (CellMapInfoStatic staticInfo, CellMapInfoDynamic dynamicInfo) GetCellInfo(int cellIndex)
+    {
+        return (CellMapInfoStatic[cellIndex], CellMapInfoDynamic[cellIndex]);
     }
 }
 
@@ -58,5 +69,5 @@ public record CellMapInfoStatic
 
 public record CellMapInfoDynamic
 {
-    
+    public int Resources;
 }
