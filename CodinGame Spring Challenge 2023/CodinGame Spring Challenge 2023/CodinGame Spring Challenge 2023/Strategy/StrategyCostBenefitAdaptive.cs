@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using CodinGame_Spring_Challenge_2023.Core;
-using CodinGame_Spring_Challenge_2023.Domain;
 using CodinGame_Spring_Challenge_2023.PathFinding;
 using CodinGame_Spring_Challenge_2023.Utils;
 
@@ -13,77 +11,118 @@ public class StrategyCostBenefitAdaptive
 {
     private GameState _gameState;
     private PathFinder _pathFinder;
-    private MapInfo _mapInfo;
     private readonly ShortestTree _shortestTree;
 
     //private List<int> _currentlyVisiting = new();
 
-    public StrategyCostBenefitAdaptive(GameState gameState, PathFinder pathFinder, MapInfo mapInfo, ShortestTree shortestTree)
+    public StrategyCostBenefitAdaptive(GameState gameState, PathFinder pathFinder,
+        ShortestTree shortestTree)
     {
         _gameState = gameState;
         _pathFinder = pathFinder;
-        _mapInfo = mapInfo;
         _shortestTree = shortestTree;
     }
 
-    public OneOf<(int cost, float benefit), Invalid> CostBenefit(
+    public static float CalculatePotentialBenefit(List<(int index, float resources)> crystalResources,
+        List<(int index, float resources)> eggResources, float myAnts,
+        int numLocations, int numFrames)
+    {
+        if (numFrames == 0)
+        {
+            return 0;
+        }
+
+        var averageAntsPerLocation = myAnts / numLocations;
+        if (eggResources.Count == 0)
+        {
+            return crystalResources.Sum(x => Math.Min(x.resources, numFrames * averageAntsPerLocation));
+        }
+
+        var newEggResources = eggResources
+            .Select(x => x with { resources = Math.Max(0, x.resources - averageAntsPerLocation) }).ToList();
+        var newCrystalResources = crystalResources
+            .Select(x => x with { resources = Math.Max(0, x.resources - averageAntsPerLocation) }).ToList();
+
+        var eggsConsumed = newEggResources.Sum(x => Math.Min(x.resources, averageAntsPerLocation));
+        var crystalsConsumed = newCrystalResources.Sum(x => Math.Min(x.resources, averageAntsPerLocation));
+
+        var myNewAnts = myAnts + eggsConsumed;
+
+        return crystalsConsumed + CalculatePotentialBenefit(newCrystalResources, newEggResources, myNewAnts,
+            numLocations, numFrames - 1);
+    }
+
+    private OneOf<(int cost, float benefit), Invalid> CostBenefit(
         List<int> currentlyVisiting,
         int potentialLocation,
         bool isEgg,
         int currentNumAnts,
-        List<int> eggsResourcesVisited,
-        List<int> crystalResourcesVisited)
+        List<(int index, float resources)> eggsResourcesVisited,
+        List<(int index, float resources)> crystalResourcesVisited,
+        int lookAhead)
     {
-        var averageCollectionRate = (float)currentNumAnts / currentlyVisiting.Count;
-        var eggCollectionRate = eggsResourcesVisited.Count * averageCollectionRate;
-        var crystalCollectionRate = crystalResourcesVisited.Count * averageCollectionRate;
+        var currentBenefit = CalculatePotentialBenefit(crystalResourcesVisited, eggsResourcesVisited, currentNumAnts,
+            currentlyVisiting.Count, lookAhead);
 
         return _pathFinder.ClosestOrDefault(potentialLocation, currentlyVisiting)
             .Match<OneOf<(int cost, float benefit), Invalid>>(
                 found =>
                 {
-                    var newAverageCollectionRate = (float)(currentNumAnts) / (currentlyVisiting.Count + found.dist);
+                    var updatedCrystalResourcesVisited = crystalResourcesVisited.ToList();
+                    var updatedEggsResourcesVisited = eggsResourcesVisited.ToList();
+                    (isEgg ? ref updatedEggsResourcesVisited : ref updatedCrystalResourcesVisited).Add((found.index,
+                        resources: _gameState
+                            .Cells[potentialLocation].Resources));
+
+                    var updatedBenefit = CalculatePotentialBenefit(updatedCrystalResourcesVisited,
+                        updatedEggsResourcesVisited, currentNumAnts,
+                        currentlyVisiting.Count + found.dist, lookAhead);
+
                     if (isEgg)
                     {
-                        newAverageCollectionRate = (currentNumAnts + newAverageCollectionRate) / (currentlyVisiting.Count + found.dist);
+                        Console.Error.WriteLine(
+                            $"CostBenefit for location {potentialLocation} Eggs: {_gameState.Cells[potentialLocation].Resources} (dist: {found.dist}) = {currentBenefit} -> {updatedBenefit}");
+                    }
+                    else
+                    {
+                        Console.Error.WriteLine(
+                            $"CostBenefit for location {potentialLocation} Crystals: {_gameState.Cells[potentialLocation].Resources} (dist: {found.dist}) = {currentBenefit} -> {updatedBenefit}");
                     }
 
-                    var newEggCollectionRate = (eggsResourcesVisited.Count + (isEgg ? 1 : 0)) * newAverageCollectionRate;
-                    var newCrystalCollectionRate = (crystalResourcesVisited.Count + (isEgg ? 0 : 1)) * newAverageCollectionRate;
-                    return (found.dist, newEggCollectionRate - eggCollectionRate + newCrystalCollectionRate - crystalCollectionRate);
+                    return (found.dist, updatedBenefit - currentBenefit);
                 },
                 _ => new Invalid());
     }
 
-    public IEnumerable<int> Update()
+    public IEnumerable<int> Update(int projectedTurnsUntilGameEnds)
     {
-        /*
-        _currentlyVisiting.RemoveAll(index => _gameState.Cells[index].Resources == 0);
-
-        if (_currentlyVisiting.Count == 0)
-        {
-            _currentlyVisiting = _gameState.MyBaseLocations.ToList();
-        }
-        */
-
+        Console.Error.WriteLine("Strategy: Projected Turns Until Game Ends: " + projectedTurnsUntilGameEnds);
         var currentlyVisiting = _gameState.MyBaseLocations.ToList();
         while (true)
         {
             Console.Error.WriteLine("Strategy: Currently visiting: " + string.Join(",", currentlyVisiting));
-            var potentialLocations = _gameState.CrystalLocations.Select(index => (index, isEgg: true)).ToList();
-            var myVisitedEggLocations = currentlyVisiting.Where(x => _gameState.EggLocations.Contains(x)).ToList();
-            var myVisitedCrystalLocations = currentlyVisiting.Where(x => _gameState.CrystalLocations.Contains(x)).ToList();
+            var potentialLocations = _gameState.CrystalLocations.Select(index => (index, isEgg: false)).ToList();
+            var myVisitedEggLocations = currentlyVisiting.Where(x => _gameState.EggLocations.Contains(x))
+                .Select(index => (index, resources: (float)_gameState.Cells[index].Resources)).ToList();
+            var myVisitedCrystalLocations =
+                currentlyVisiting.Where(x => _gameState.CrystalLocations.Contains(x))
+                    .Select(index => (index, resources: (float)_gameState.Cells[index].Resources)).ToList();
 
             if (!myVisitedEggLocations.Any())
             {
-                potentialLocations.AddRange(_gameState.EggLocations.Select(index => (index, isEgg: false)));
+                potentialLocations.AddRange(_gameState.EggLocations.Select(index => (index, isEgg: true)));
             }
 
             potentialLocations.RemoveAll(x => currentlyVisiting.Contains(x.index));
 
-            var costBenefits = potentialLocations.Select(x => (x.index, costBenefit: CostBenefit(currentlyVisiting, x.index,
-                    x.isEgg, _gameState.MyAntCount,
-                    myVisitedEggLocations, myVisitedCrystalLocations))).Where(x => x.costBenefit.IsValue1)
+            var costBenefits = potentialLocations.Select(x => (x.index, costBenefit: CostBenefit(currentlyVisiting,
+                    x.index,
+                    x.isEgg,
+                    _gameState.MyAntCount,
+                    myVisitedEggLocations,
+                    myVisitedCrystalLocations,
+                    projectedTurnsUntilGameEnds)))
+                .Where(x => x.costBenefit.IsValue1)
                 .Select(x => (x.index, costBenefit: x.costBenefit.Value1))
                 .OrderBy(x => -x.costBenefit.benefit).ToList();
 
@@ -91,16 +130,19 @@ public class StrategyCostBenefitAdaptive
             {
                 foreach (var result in costBenefits)
                 {
-                    Console.Error.WriteLine($"Strategy: Cost of going to {result.index} is {result.costBenefit.cost} and benefit is {result.costBenefit.benefit}");
+                    Console.Error.WriteLine(
+                        $"Strategy: Cost of going to {result.index} is {result.costBenefit.cost} and benefit is {result.costBenefit.benefit}");
                 }
-                
+
                 var first = costBenefits.First();
-                if (first.costBenefit.benefit > 0 || (myVisitedCrystalLocations.Count == 0 && myVisitedEggLocations.Count == 0))
+                if (first.costBenefit.benefit > 0 ||
+                    (myVisitedCrystalLocations.Count == 0 && myVisitedEggLocations.Count == 0))
                 {
                     //Console.Error.WriteLine($"Strategy: Cost of going to {first.index} is {first.costBenefit.cost} and benefit is {first.costBenefit.benefit}");
-                    var locations = _gameState.MyBaseLocations.Concat(myVisitedEggLocations)
-                        .Concat(myVisitedCrystalLocations).Concat(new []{ first.index});
-                    currentlyVisiting = ShortestTreeWalker.WalkShortestTree(_gameState,_pathFinder, _shortestTree.GetShortestTree(locations)).ToList();
+                    var locations = _gameState.MyBaseLocations.Concat(myVisitedEggLocations.Select(x => x.index))
+                        .Concat(myVisitedCrystalLocations.Select(x => x.index)).Concat(new[] { first.index });
+                    currentlyVisiting = ShortestTreeWalker
+                        .WalkShortestTree(_gameState, _pathFinder, _shortestTree.GetShortestTree(locations)).ToList();
                     continue;
                 }
             }
@@ -148,6 +190,5 @@ public class StrategyCostBenefitAdaptive
         }
         return _gameState.MyBaseLocations;
         */
-
     }
 }

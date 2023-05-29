@@ -133,7 +133,7 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
 */
 
     public IOrderedEnumerable<(int index, int dist)> ClosestDistances(int fromIndex, IEnumerable<int> toIndexList) =>
-        toIndexList.Select(index => (index: index, dist: Distance(fromIndex, index))).Where((_, dist) => dist > -1)
+        toIndexList.Select(index => (index, dist: Distance(fromIndex, index))).Where((_, dist) => dist > -1)
             .OrderBy(x => x.dist);
 
     public OneOf<(int index, int dist), NotFound> ClosestOrDefault(int fromIndex, IEnumerable<int> toIndexList)

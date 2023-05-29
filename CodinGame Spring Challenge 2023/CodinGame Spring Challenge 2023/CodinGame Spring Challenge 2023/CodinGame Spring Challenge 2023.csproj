@@ -55,6 +55,7 @@
         <Compile Include="PathFinding\ShortestTreeWalker.cs" />
         <Compile Include="Player.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Strategy\StrategyAssessWinConditions.cs" />
         <Compile Include="Strategy\StrategyCostBenefitAdaptive.cs" />
         <Compile Include="Utils\Invalid.cs" />
         <Compile Include="Utils\NotFound.cs" />
