@@ -79,6 +79,14 @@ public static class GameStateReader
 
     public static void ReadStateUpdate(GameState gameState)
     {
+        gameState.MyAntLookup.Clear();
+        gameState.EnemyAntLookup.Clear();
+
+        gameState.MyAntCount = 0;
+        gameState.EnemyAntCount = 0;
+        gameState.MyCrystalCount = 0;
+        gameState.EnemyCrystalCount = 0;
+
         for (var i = 0; i < gameState.NumberOfCells; i++)
         {
             var inputs = Console.ReadLine().Split(' ');
@@ -106,6 +114,18 @@ public static class GameStateReader
                 gameState.MyEggLocations.Remove(i);
                 gameState.EnemyEggLocations.Remove(i);
                 gameState.Eggs.RemoveAll(x => x.CellIndex == i);
+            }
+
+            if (myAnts > 0)
+            {
+                gameState.MyAntLookup[i] = myAnts;
+                gameState.MyAntCount += myAnts;
+            }
+
+            if (oppAnts > 0)
+            {
+                gameState.EnemyAntLookup[i] = myAnts;
+                gameState.EnemyAntCount += myAnts;
             }
         }
     }

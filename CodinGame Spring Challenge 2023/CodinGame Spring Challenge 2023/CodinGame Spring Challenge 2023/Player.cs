@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodinGame_Spring_Challenge_2023.Core;
 using CodinGame_Spring_Challenge_2023.PathFinding;
@@ -12,8 +13,14 @@ public static class Player
         var gameActions = new GameActions();
         var gameState = GameStateReader.ReadInitialState();
         var pathFinder = new PathFinder(gameState);
-        pathFinder.OnPathExpansionComplete(() => GameStateReader.DetermineOwnership(gameState, pathFinder));
         var shortestTree = new ShortestTree(pathFinder);
+        var mapInfo = new MapInfo(gameState, pathFinder);
+        
+        pathFinder.OnPathExpansionComplete(() =>
+        {
+            GameStateReader.DetermineOwnership(gameState, pathFinder);
+            mapInfo.UpdateStatic();
+        });
 
         var maxLoops = 20;
         while (!pathFinder.ExpandPathKnowledge() && maxLoops-- > 0)
@@ -25,11 +32,33 @@ public static class Player
             Console.Error.WriteLine("Could not complete path map, will update each frame but may not be optimal");
         }
 
+        List<int> currentlyVisiting = new List<int>();
+
         // game looping
         while (true)
         {
             GameStateReader.ReadStateUpdate(gameState);
             pathFinder.ExpandPathKnowledge();
+
+            currentlyVisiting.RemoveAll(index => gameState.Cells[index].Resources == 0);
+            
+            if (currentlyVisiting.Count == 0)
+            {
+                currentlyVisiting = gameState.MyBaseLocations.ToList();
+            }
+
+            //TODO, build existing tree to build on
+            var allpoints =
+                ShortestTreeWalker.WalkShortestTree(gameState, pathFinder, shortestTree.GetShortestTree(locations));
+            
+            
+            var eggsCloserThan3FromBase = gameState.EggLocations.Select(x => gameState.)
+                
+                
+            var shortestTreeUsingHighestValueMyCrystalAndClosestEggLessThan3FromBase =
+                new int[] { gameState.MyCrystalLocations.Max(x => gameState.Cells[x].Resources) }
+
+
 
             var eggs = pathFinder.ClosestNOf(gameState, 1, gameState.MyEggLocations, gameState.ContestedEggLocations)
                 .ToList();

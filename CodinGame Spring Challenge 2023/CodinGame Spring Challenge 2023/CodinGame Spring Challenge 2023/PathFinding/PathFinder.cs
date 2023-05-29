@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodinGame_Spring_Challenge_2023.Core;
+using CodinGame_Spring_Challenge_2023.Domain;
 
 namespace CodinGame_Spring_Challenge_2023.PathFinding;
 
@@ -9,16 +10,17 @@ public class PathFinder
 {
     private readonly int _numCells;
 
-    private readonly List<Dictionary<int, (int dir, int dist)>> _cellPathMap = new List<Dictionary<int, (int dir, int dist)>>();
+    private readonly List<Dictionary<int, (int dir, int dist)>> _cellPathMap =
+        new List<Dictionary<int, (int dir, int dist)>>();
 
     private bool _fullyExpanded;
-    
+
     private Action _onPathExpansionComplete;
 
     public PathFinder(GameState gameState)
     {
         _numCells = gameState.NumberOfCells;
-        _onPathExpansionComplete = () => {};
+        _onPathExpansionComplete = () => { };
 
         BuildPathInfo(gameState);
     }
@@ -27,7 +29,7 @@ public class PathFinder
     {
         _numCells = numCells;
         _cellPathMap = cellPathMap;
-        _onPathExpansionComplete = () => {};
+        _onPathExpansionComplete = () => { };
     }
 
     public void OnPathExpansionComplete(Action action)
@@ -140,10 +142,10 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
         {
             return closestDistances.First();
         }
-        
+
         return (-1, -1);
     }
-    
+
     public int Distance(int fromIndex, int toIndex)
     {
         if (_cellPathMap[fromIndex].TryGetValue(toIndex, out var path))
@@ -153,14 +155,14 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
 
         return -1;
     }
-    
+
     public IEnumerable<int> PathTo(GameState gameState, int fromIndex, int toIndex)
     {
         if (!_cellPathMap[fromIndex].ContainsKey(toIndex))
         {
             return Enumerable.Empty<int>();
         }
-        
+
         var path = new List<int>();
         var currentCellIndex = fromIndex;
         while (currentCellIndex != toIndex)
@@ -173,7 +175,7 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
         path.Add(toIndex);
         return path;
     }
-    
+
     public IEnumerable<int> ClosestNOf(GameState gameState, int num, params IEnumerable<int>[] indexLists)
     {
         var closest = new List<int>();
@@ -199,6 +201,19 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
         return closest.Take(num);
     }
 
+    public IOrderedEnumerable<(int fromIndex, int toIndex, int dist, CellType cellType)> OrderedPairs(GameState gameState,
+        IEnumerable<int> fromList, params (IEnumerable<int>, CellType)[] indexLists)
+    {
+        var orderedPairs = (
+            from fromIndex in fromList
+            from list in indexLists
+            from toIndex in list.Item1
+            select (fromIndex, toIndex, dist: Distance(fromIndex, toIndex), cellType: list.Item2)
+        ).ToList();
+
+        return orderedPairs.OrderBy(x => x.dist);
+    }
+
     public string DebugDistances(GameState gameState)
     {
         var output = "Distances from my base: ";
@@ -210,7 +225,7 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
                 output += $"({crystal.index}, {crystal.dist}) ";
             }
         }
-        
+
         output += " Distances from enemy base: ";
         foreach (var enemyBase in gameState.EnemyBases)
         {
@@ -231,7 +246,7 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
         {
             foreach (var crystal in gameState.CrystalLocations)
             {
-                var path = PathTo(gameState,myBase.CellIndex, crystal);
+                var path = PathTo(gameState, myBase.CellIndex, crystal);
                 output += $"(Base({myBase.CellIndex}) -> Crystal({crystal}) : ";
                 foreach (var step in path)
                 {
@@ -239,7 +254,7 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
                 }
             }
         }
-        
+
         output += " Paths from enemy base: ";
         foreach (var enemyBase in gameState.EnemyBases)
         {

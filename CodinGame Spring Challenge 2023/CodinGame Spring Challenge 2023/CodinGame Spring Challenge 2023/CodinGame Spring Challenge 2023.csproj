@@ -49,6 +49,7 @@
         <Compile Include="Core\GameActions.cs" />
         <Compile Include="Core\GameState.cs" />
         <Compile Include="Core\GameStateReader.cs" />
+        <Compile Include="PathFinding\MapInfo.cs" />
         <Compile Include="PathFinding\PathFinder.cs" />
         <Compile Include="PathFinding\ShortestTree.cs" />
         <Compile Include="PathFinding\ShortestTreeWalker.cs" />
