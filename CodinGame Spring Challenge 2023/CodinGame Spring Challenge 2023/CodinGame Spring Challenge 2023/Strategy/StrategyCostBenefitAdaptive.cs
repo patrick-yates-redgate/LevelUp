@@ -25,7 +25,7 @@ public class StrategyCostBenefitAdaptive
 
     public static float CalculatePotentialBenefit(List<(int index, float resources)> crystalResources,
         List<(int index, float resources)> eggResources, float myAnts,
-        int numLocations, int numFrames)
+        int numLocations, int numFrames, float enemyPotentialConsumeRate)
     {
         if (numFrames == 0)
         {
@@ -48,21 +48,31 @@ public class StrategyCostBenefitAdaptive
 
         var myNewAnts = myAnts + eggsConsumed;
 
-        return crystalsConsumed + CalculatePotentialBenefit(newCrystalResources, newEggResources, myNewAnts,
-            numLocations, numFrames - 1);
+        return 0.2f * enemyPotentialConsumeRate + crystalsConsumed + CalculatePotentialBenefit(newCrystalResources, newEggResources, myNewAnts,
+            numLocations, numFrames - 1, enemyPotentialConsumeRate);
     }
 
     private OneOf<(int cost, float benefit), Invalid> CostBenefit(
         List<int> currentlyVisiting,
+        List<int> enemyLocations,
         int potentialLocation,
         bool isEgg,
         int currentNumAnts,
+        int enemyNumAnts,
         List<(int index, float resources)> eggsResourcesVisited,
         List<(int index, float resources)> crystalResourcesVisited,
         int lookAhead)
     {
+        var enemyDistances = 0;
+        if (!enemyLocations.Contains(potentialLocation))
+        {
+            enemyDistances = _pathFinder.ClosestOrDefault(potentialLocation, enemyLocations).Match(found => found.dist, _ => 5);   
+        }
+
+        var enemyPotentialConsumeRate = enemyNumAnts / (enemyLocations.Count + enemyDistances);
+        
         var currentBenefit = CalculatePotentialBenefit(crystalResourcesVisited, eggsResourcesVisited, currentNumAnts,
-            currentlyVisiting.Count, lookAhead);
+            currentlyVisiting.Count, lookAhead, enemyPotentialConsumeRate);
 
         return _pathFinder.ClosestOrDefault(potentialLocation, currentlyVisiting)
             .Match<OneOf<(int cost, float benefit), Invalid>>(
@@ -76,7 +86,7 @@ public class StrategyCostBenefitAdaptive
 
                     var updatedBenefit = CalculatePotentialBenefit(updatedCrystalResourcesVisited,
                         updatedEggsResourcesVisited, currentNumAnts,
-                        currentlyVisiting.Count + found.dist, lookAhead);
+                        currentlyVisiting.Count + found.dist, lookAhead, enemyPotentialConsumeRate);
 
                     if (isEgg)
                     {
@@ -113,15 +123,22 @@ public class StrategyCostBenefitAdaptive
                 potentialLocations.AddRange(_gameState.EggLocations.Select(index => (index, isEgg: true)));
             }
 
+            var enemyLocations = _gameState.Cells.Where(x => x.NumEnemyAnts > 0).Select((_, index) => index).ToList();
+
             potentialLocations.RemoveAll(x => currentlyVisiting.Contains(x.index));
 
-            var costBenefits = potentialLocations.Select(x => (x.index, costBenefit: CostBenefit(currentlyVisiting,
+            var costBenefits = potentialLocations.Select(x => (
                     x.index,
-                    x.isEgg,
-                    _gameState.MyAntCount,
-                    myVisitedEggLocations,
-                    myVisitedCrystalLocations,
-                    projectedTurnsUntilGameEnds)))
+                    costBenefit: CostBenefit(
+                        currentlyVisiting,
+                        enemyLocations,
+                        x.index,
+                        x.isEgg,
+                        _gameState.MyAntCount,
+                        _gameState.EnemyAntCount,
+                        myVisitedEggLocations,
+                        myVisitedCrystalLocations,
+                        projectedTurnsUntilGameEnds)))
                 .Where(x => x.costBenefit.IsValue1)
                 .Select(x => (x.index, costBenefit: x.costBenefit.Value1))
                 .OrderBy(x => -x.costBenefit.benefit).ToList();
@@ -135,7 +152,7 @@ public class StrategyCostBenefitAdaptive
                 }
 
                 var first = costBenefits.First();
-                if (first.costBenefit.benefit > 0 ||
+                if (first.costBenefit.benefit > .5f ||
                     (myVisitedCrystalLocations.Count == 0 && myVisitedEggLocations.Count == 0))
                 {
                     //Console.Error.WriteLine($"Strategy: Cost of going to {first.index} is {first.costBenefit.cost} and benefit is {first.costBenefit.benefit}");

@@ -16,7 +16,7 @@ public class StrategyAssessWinConditions
     {
         _gameState = gameState;
         _startingCrystalResources = _gameState.CrystalLocations.Sum(x => _gameState.Cells[x].Resources);
-        ProjectedTurnsUntilGameEnds = 30;
+        ProjectedTurnsUntilGameEnds = 10;
         _numFrames = 0;
     }
 
@@ -31,6 +31,6 @@ public class StrategyAssessWinConditions
         var consumptionRate = consumedCrystalResources / _numFrames;
 
         ProjectedTurnsUntilGameEnds =
-            (int)Math.Max(2f, Math.Min(30f, 0.5f * remainingCrystalResources / consumptionRate));
+            (int)Math.Max(2f, Math.Min(10f, 0.5f * remainingCrystalResources / consumptionRate));
     }
 }

@@ -1,0 +1,551 @@
+{
+  "Entries": [
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "MonitoredEntityAliasRepositoryRpcServer",
+      "MethodName": "GetAlias",
+      "TotalNumberOfCalls": 253,
+      "TotalDuration": "00:00:00.1024533",
+      "MinDuration": "00:00:00.0003509",
+      "MaxDuration": "00:00:00.0009870",
+      "AvgDuration": "00:00:00.0004049"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AlertDefinitionRepositoryRpcServer",
+      "MethodName": "AlertDefinitions",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0039268",
+      "MinDuration": "00:00:00.0012379",
+      "MaxDuration": "00:00:00.0013601",
+      "AvgDuration": "00:00:00.0013089"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AlertRepositoryRpcServer",
+      "MethodName": "GetLatestAlerts",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.3275621",
+      "MinDuration": "00:00:00.1077082",
+      "MaxDuration": "00:00:00.1099401",
+      "AvgDuration": "00:00:00.1091873"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "MonitoredEntityRpcServer",
+      "MethodName": "GetAll",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.3058597",
+      "MinDuration": "00:00:00.0833062",
+      "MaxDuration": "00:00:00.1376762",
+      "AvgDuration": "00:00:00.1019532"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "CustomMetricRpcServer",
+      "MethodName": "ListAllMetrics",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0433202",
+      "MinDuration": "00:00:00.0063089",
+      "MaxDuration": "00:00:00.0305409",
+      "AvgDuration": "00:00:00.0144400"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AnnotationRpcServer",
+      "MethodName": "GetAnnotationsForServer",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0439515",
+      "MinDuration": "00:00:00.0138264",
+      "MaxDuration": "00:00:00.0162576",
+      "AvgDuration": "00:00:00.0146505"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "RequiredEntitlementsServiceRpcServer",
+      "MethodName": "GetLatestDelayedChangeTimestamp",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0018164",
+      "MinDuration": "00:00:00.0005577",
+      "MaxDuration": "00:00:00.0006890",
+      "AvgDuration": "00:00:00.0006054"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "CustomAlertDefinitionRpcServer",
+      "MethodName": "ListAllAlertDefinitions",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0083458",
+      "MinDuration": "00:00:00.0024476",
+      "MaxDuration": "00:00:00.0030888",
+      "AvgDuration": "00:00:00.0027819"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "ReportsRepositoryRpcServer",
+      "MethodName": "GetReportsToGenerate",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0595758",
+      "MinDuration": "00:00:00.0027819",
+      "MaxDuration": "00:00:00.0535281",
+      "AvgDuration": "00:00:00.0198586"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AlertMetricsRepositoryRpcServer",
+      "MethodName": "GetAlertCount",
+      "TotalNumberOfCalls": 1,
+      "TotalDuration": "00:00:00.1388887",
+      "MinDuration": "00:00:00.1388887",
+      "MaxDuration": "00:00:00.1388887",
+      "AvgDuration": "00:00:00.1388887"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "DisplayOptionsRpcServer",
+      "MethodName": "GetHideJobsPage",
+      "TotalNumberOfCalls": 6,
+      "TotalDuration": "00:00:00.0037595",
+      "MinDuration": "00:00:00.0004275",
+      "MaxDuration": "00:00:00.0011107",
+      "AvgDuration": "00:00:00.0006265"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "DisplayOptionsRpcServer",
+      "MethodName": "GetUse12HourClock",
+      "TotalNumberOfCalls": 9,
+      "TotalDuration": "00:00:00.0065080",
+      "MinDuration": "00:00:00.0005391",
+      "MaxDuration": "00:00:00.0011546",
+      "AvgDuration": "00:00:00.0007231"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AuthenticationConfigRpcServer",
+      "MethodName": "GetAllowListPrincipals",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0096355",
+      "MinDuration": "00:00:00.0028197",
+      "MaxDuration": "00:00:00.0034843",
+      "AvgDuration": "00:00:00.0032118"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "FailoverClusterDisplayOptionsRpcServer",
+      "MethodName": "GetFailoverClusterDisplayOption",
+      "TotalNumberOfCalls": 66,
+      "TotalDuration": "00:00:00.0302142",
+      "MinDuration": "00:00:00.0003586",
+      "MaxDuration": "00:00:00.0008340",
+      "AvgDuration": "00:00:00.0004577"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "SqlNetworkNameRpcServer",
+      "MethodName": "GetSqlNetworkName",
+      "TotalNumberOfCalls": 649,
+      "TotalDuration": "00:00:00.3308232",
+      "MinDuration": "00:00:00.0003775",
+      "MaxDuration": "00:00:00.0028851",
+      "AvgDuration": "00:00:00.0005097"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "DataPresenterRpcServer",
+      "MethodName": "Query",
+      "TotalNumberOfCalls": 47,
+      "TotalDuration": "00:00:08.1525726",
+      "MinDuration": "00:00:00.0064361",
+      "MaxDuration": "00:00:02.4119030",
+      "AvgDuration": "00:00:00.1734589"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AlertSummaryRepositoryRpcServer",
+      "MethodName": "GetActiveAlertSummaries",
+      "TotalNumberOfCalls": 11,
+      "TotalDuration": "00:00:00.7765593",
+      "MinDuration": "00:00:00.0547882",
+      "MaxDuration": "00:00:00.1219138",
+      "AvgDuration": "00:00:00.0705963"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "ConfigurationRpcServer",
+      "MethodName": "HasConfiguredNotifications",
+      "TotalNumberOfCalls": 12,
+      "TotalDuration": "00:00:00.0062590",
+      "MinDuration": "00:00:00.0003807",
+      "MaxDuration": "00:00:00.0011419",
+      "AvgDuration": "00:00:00.0005215"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AuthorizedEntitiesRpcServer",
+      "MethodName": "GetAuthorizedEntities",
+      "TotalNumberOfCalls": 14,
+      "TotalDuration": "00:00:00.0090262",
+      "MinDuration": "00:00:00.0004226",
+      "MaxDuration": "00:00:00.0018912",
+      "AvgDuration": "00:00:00.0006447"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "ReadOnlyGroupRepositoryRpcServer",
+      "MethodName": "GetGroupAssignments",
+      "TotalNumberOfCalls": 11,
+      "TotalDuration": "00:00:00.0135623",
+      "MinDuration": "00:00:00.0009304",
+      "MaxDuration": "00:00:00.0021528",
+      "AvgDuration": "00:00:00.0012329"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "GlobalDashboardRpcServer",
+      "MethodName": "GetDashboardModel",
+      "TotalNumberOfCalls": 11,
+      "TotalDuration": "00:00:25.8530569",
+      "MinDuration": "00:00:02.1104483",
+      "MaxDuration": "00:00:02.8559102",
+      "AvgDuration": "00:00:02.3502779"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "DisplayOptionsRpcServer",
+      "MethodName": "GetShowSuspendedEntitiesOnGlobalDashboard",
+      "TotalNumberOfCalls": 11,
+      "TotalDuration": "00:00:00.0051570",
+      "MinDuration": "00:00:00.0003617",
+      "MaxDuration": "00:00:00.0007289",
+      "AvgDuration": "00:00:00.0004688"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AlertNotifierRpcServer",
+      "MethodName": "GetFailingNotifierNames",
+      "TotalNumberOfCalls": 70,
+      "TotalDuration": "00:00:00.0525630",
+      "MinDuration": "00:00:00.0005314",
+      "MaxDuration": "00:00:00.0018174",
+      "AvgDuration": "00:00:00.0007509"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "CredentialDecryptionFailedServiceRpcServer",
+      "MethodName": "CredentialDecryptionFailed",
+      "TotalNumberOfCalls": 70,
+      "TotalDuration": "00:00:00.3558417",
+      "MinDuration": "00:00:00.0038073",
+      "MaxDuration": "00:00:00.0367199",
+      "AvgDuration": "00:00:00.0050834"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "BaseMonitorRpcServer",
+      "MethodName": "GetStatus",
+      "TotalNumberOfCalls": 177,
+      "TotalDuration": "00:00:03.2625778",
+      "MinDuration": "00:00:00.0100743",
+      "MaxDuration": "00:00:00.0586214",
+      "AvgDuration": "00:00:00.0184326"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "",
+      "MethodName": "Connect",
+      "TotalNumberOfCalls": 177,
+      "TotalDuration": "00:00:07.2451893",
+      "MinDuration": "00:00:00.0127772",
+      "MaxDuration": "00:00:03.0222121",
+      "AvgDuration": "00:00:00.0409332"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "AlertMetricsRepositoryRpcServer",
+      "MethodName": "GetAlertCounts",
+      "TotalNumberOfCalls": 13,
+      "TotalDuration": "00:00:01.4359111",
+      "MinDuration": "00:00:00.0931155",
+      "MaxDuration": "00:00:00.2510015",
+      "AvgDuration": "00:00:00.1104547"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "BaseMonitorRpcServer",
+      "MethodName": "IsDbConnected",
+      "TotalNumberOfCalls": 13,
+      "TotalDuration": "00:00:00.0089140",
+      "MinDuration": "00:00:00.0004683",
+      "MaxDuration": "00:00:00.0011299",
+      "AvgDuration": "00:00:00.0006856"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "ConfigurationRpcServer",
+      "MethodName": "GetNotificationSettings",
+      "TotalNumberOfCalls": 13,
+      "TotalDuration": "00:00:00.0072089",
+      "MinDuration": "00:00:00.0004110",
+      "MaxDuration": "00:00:00.0011992",
+      "AvgDuration": "00:00:00.0005545"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "BaseMonitorRpcServer",
+      "MethodName": "Information",
+      "TotalNumberOfCalls": 13,
+      "TotalDuration": "00:00:00.0543455",
+      "MinDuration": "00:00:00.0037567",
+      "MaxDuration": "00:00:00.0048035",
+      "AvgDuration": "00:00:00.0041804"
+    },
+    {
+      "BaseMonitorName": "HQEW1ITPDBA19.HQ000.identity.msc.com:7399",
+      "ServiceName": "DisplayOptionsRpcServer",
+      "MethodName": "GetForceErroredServerCardsRedOnGlobalDashboard",
+      "TotalNumberOfCalls": 11,
+      "TotalDuration": "00:00:00.0072993",
+      "MinDuration": "00:00:00.0004333",
+      "MaxDuration": "00:00:00.0015960",
+      "AvgDuration": "00:00:00.0006635"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "CustomAlertDefinitionRpcServer",
+      "MethodName": "GetAlertDefinition",
+      "TotalNumberOfCalls": 2,
+      "TotalDuration": "00:00:00.0049313",
+      "MinDuration": "00:00:00.0024649",
+      "MaxDuration": "00:00:00.0024664",
+      "AvgDuration": "00:00:00.0024656"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AlertConfigurationRpcServer",
+      "MethodName": "GetAlertConfiguration",
+      "TotalNumberOfCalls": 2,
+      "TotalDuration": "00:00:00.0122964",
+      "MinDuration": "00:00:00.0061181",
+      "MaxDuration": "00:00:00.0061783",
+      "AvgDuration": "00:00:00.0061482"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AlertConfigurationRpcServer",
+      "MethodName": "GetAlertSettingsAncestry",
+      "TotalNumberOfCalls": 2,
+      "TotalDuration": "00:00:00.0149461",
+      "MinDuration": "00:00:00.0072802",
+      "MaxDuration": "00:00:00.0076659",
+      "AvgDuration": "00:00:00.0074730"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AlertDefinitionRepositoryRpcServer",
+      "MethodName": "AlertDefinition",
+      "TotalNumberOfCalls": 4,
+      "TotalDuration": "00:00:00.0027946",
+      "MinDuration": "00:00:00.0004694",
+      "MaxDuration": "00:00:00.0009212",
+      "AvgDuration": "00:00:00.0006986"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "MonitoredEntityRpcServer",
+      "MethodName": "GetAll",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.1868795",
+      "MinDuration": "00:00:00.0552143",
+      "MaxDuration": "00:00:00.0717400",
+      "AvgDuration": "00:00:00.0622931"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "CustomMetricRpcServer",
+      "MethodName": "ListAllMetrics",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0196027",
+      "MinDuration": "00:00:00.0064415",
+      "MaxDuration": "00:00:00.0065917",
+      "AvgDuration": "00:00:00.0065342"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AlertConfigurationRpcServer",
+      "MethodName": "GetAlertConfigFolders",
+      "TotalNumberOfCalls": 2,
+      "TotalDuration": "00:00:09.1849678",
+      "MinDuration": "00:00:04.3758184",
+      "MaxDuration": "00:00:04.8091494",
+      "AvgDuration": "00:00:04.5924839"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "RequiredEntitlementsServiceRpcServer",
+      "MethodName": "GetLatestDelayedChangeTimestamp",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0031798",
+      "MinDuration": "00:00:00.0006606",
+      "MaxDuration": "00:00:00.0014637",
+      "AvgDuration": "00:00:00.0010599"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "CustomAlertDefinitionRpcServer",
+      "MethodName": "ListAllAlertDefinitions",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0080714",
+      "MinDuration": "00:00:00.0022505",
+      "MaxDuration": "00:00:00.0030341",
+      "AvgDuration": "00:00:00.0026904"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AlertDefinitionRepositoryRpcServer",
+      "MethodName": "AlertDefinitions",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0095225",
+      "MinDuration": "00:00:00.0018145",
+      "MaxDuration": "00:00:00.0056400",
+      "AvgDuration": "00:00:00.0031741"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AlertConfigurationRpcServer",
+      "MethodName": "GetAlertConfigForChannel",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:25.9072767",
+      "MinDuration": "00:00:00.4275312",
+      "MaxDuration": "00:00:18.5872772",
+      "AvgDuration": "00:00:08.6357589"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AlertMetricsRepositoryRpcServer",
+      "MethodName": "GetAlertCount",
+      "TotalNumberOfCalls": 1,
+      "TotalDuration": "00:00:00.0952836",
+      "MinDuration": "00:00:00.0952836",
+      "MaxDuration": "00:00:00.0952836",
+      "AvgDuration": "00:00:00.0952836"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AuthenticationConfigRpcServer",
+      "MethodName": "GetAllowListPrincipals",
+      "TotalNumberOfCalls": 3,
+      "TotalDuration": "00:00:00.0118516",
+      "MinDuration": "00:00:00.0036452",
+      "MaxDuration": "00:00:00.0044117",
+      "AvgDuration": "00:00:00.0039505"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AuthorizedEntitiesRpcServer",
+      "MethodName": "GetAuthorizedEntities",
+      "TotalNumberOfCalls": 13,
+      "TotalDuration": "00:00:00.0086897",
+      "MinDuration": "00:00:00.0004758",
+      "MaxDuration": "00:00:00.0010956",
+      "AvgDuration": "00:00:00.0006684"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "ReadOnlyGroupRepositoryRpcServer",
+      "MethodName": "GetGroupAssignments",
+      "TotalNumberOfCalls": 11,
+      "TotalDuration": "00:00:00.0403575",
+      "MinDuration": "00:00:00.0012244",
+      "MaxDuration": "00:00:00.0235294",
+      "AvgDuration": "00:00:00.0036688"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "GlobalDashboardRpcServer",
+      "MethodName": "GetDashboardModel",
+      "TotalNumberOfCalls": 11,
+      "TotalDuration": "00:00:15.4241671",
+      "MinDuration": "00:00:01.2489531",
+      "MaxDuration": "00:00:02.0263507",
+      "AvgDuration": "00:00:01.4021970"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "CredentialDecryptionFailedServiceRpcServer",
+      "MethodName": "CredentialDecryptionFailed",
+      "TotalNumberOfCalls": 70,
+      "TotalDuration": "00:00:00.5173157",
+      "MinDuration": "00:00:00.0036571",
+      "MaxDuration": "00:00:00.1769225",
+      "AvgDuration": "00:00:00.0073902"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "BaseMonitorRpcServer",
+      "MethodName": "GetStatus",
+      "TotalNumberOfCalls": 128,
+      "TotalDuration": "00:00:04.5146078",
+      "MinDuration": "00:00:00.0190149",
+      "MaxDuration": "00:00:00.1589978",
+      "AvgDuration": "00:00:00.0352703"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "",
+      "MethodName": "Connect",
+      "TotalNumberOfCalls": 128,
+      "TotalDuration": "00:00:03.4643413",
+      "MinDuration": "00:00:00.0126706",
+      "MaxDuration": "00:00:00.1136442",
+      "AvgDuration": "00:00:00.0270651"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "AlertMetricsRepositoryRpcServer",
+      "MethodName": "GetAlertCounts",
+      "TotalNumberOfCalls": 13,
+      "TotalDuration": "00:00:01.2195656",
+      "MinDuration": "00:00:00.0769697",
+      "MaxDuration": "00:00:00.2523905",
+      "AvgDuration": "00:00:00.0938127"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "BaseMonitorRpcServer",
+      "MethodName": "IsDbConnected",
+      "TotalNumberOfCalls": 13,
+      "TotalDuration": "00:00:00.0098839",
+      "MinDuration": "00:00:00.0005847",
+      "MaxDuration": "00:00:00.0014498",
+      "AvgDuration": "00:00:00.0007603"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "ConfigurationRpcServer",
+      "MethodName": "GetNotificationSettings",
+      "TotalNumberOfCalls": 21,
+      "TotalDuration": "00:00:00.0115791",
+      "MinDuration": "00:00:00.0004004",
+      "MaxDuration": "00:00:00.0010888",
+      "AvgDuration": "00:00:00.0005513"
+    },
+    {
+      "BaseMonitorName": "OVHWEPRD-MON001.CH001-OV-H.identity.msc.com:7399",
+      "ServiceName": "BaseMonitorRpcServer",
+      "MethodName": "Information",
+      "TotalNumberOfCalls": 13,
+      "TotalDuration": "00:00:00.0684696",
+      "MinDuration": "00:00:00.0036718",
+      "MaxDuration": "00:00:00.0113868",
+      "AvgDuration": "00:00:00.0052668"
+    }
+  ],
+  "RecordingPeriods": [
+    {
+      "StartDate": "2023-05-26T13:28:24.4684929Z",
+      "EndDate": "2023-05-26T13:31:29.4866363Z"
+    }
+  ]
+}
+
