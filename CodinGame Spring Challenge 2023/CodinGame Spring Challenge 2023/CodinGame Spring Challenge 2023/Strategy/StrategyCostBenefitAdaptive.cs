@@ -24,7 +24,7 @@ public class StrategyCostBenefitAdaptive
     }
 
     public static float CalculatePotentialBenefit(List<(int index, float resources)> crystalResources,
-        List<(int index, float resources)> eggResources, float myAnts,
+        List<(int index, float resources)> eggResources, float myPotentialAnts, int numActualAnts,
         int numLocations, int numFrames, float enemyPotentialConsumeRate)
     {
         if (numFrames == 0)
@@ -32,7 +32,12 @@ public class StrategyCostBenefitAdaptive
             return 0;
         }
 
-        var averageAntsPerLocation = myAnts / numLocations;
+        if (numLocations > numActualAnts)
+        {
+            return -1000;
+        }
+
+        var averageAntsPerLocation = myPotentialAnts / numLocations;
         if (eggResources.Count == 0)
         {
             return crystalResources.Sum(x => Math.Min(x.resources, numFrames * averageAntsPerLocation));
@@ -46,9 +51,10 @@ public class StrategyCostBenefitAdaptive
         var eggsConsumed = newEggResources.Sum(x => Math.Min(x.resources, averageAntsPerLocation));
         var crystalsConsumed = newCrystalResources.Sum(x => Math.Min(x.resources, averageAntsPerLocation));
 
-        var myNewAnts = myAnts + eggsConsumed;
+        var myNewAnts = myPotentialAnts + eggsConsumed;
 
-        return 0.2f * enemyPotentialConsumeRate + crystalsConsumed + CalculatePotentialBenefit(newCrystalResources, newEggResources, myNewAnts,
+        return 0.2f * enemyPotentialConsumeRate + crystalsConsumed + CalculatePotentialBenefit(newCrystalResources,
+            newEggResources, myNewAnts, numActualAnts,
             numLocations, numFrames - 1, enemyPotentialConsumeRate);
     }
 
@@ -66,12 +72,14 @@ public class StrategyCostBenefitAdaptive
         var enemyDistances = 0;
         if (!enemyLocations.Contains(potentialLocation))
         {
-            enemyDistances = _pathFinder.ClosestOrDefault(potentialLocation, enemyLocations).Match(found => found.dist, _ => 5);   
+            enemyDistances = _pathFinder.ClosestOrDefault(potentialLocation, enemyLocations)
+                .Match(found => found.dist, _ => 5);
         }
 
         var enemyPotentialConsumeRate = enemyNumAnts / (enemyLocations.Count + enemyDistances);
-        
+
         var currentBenefit = CalculatePotentialBenefit(crystalResourcesVisited, eggsResourcesVisited, currentNumAnts,
+            _gameState.MyAntCount,
             currentlyVisiting.Count, lookAhead, enemyPotentialConsumeRate);
 
         return _pathFinder.ClosestOrDefault(potentialLocation, currentlyVisiting)
@@ -85,18 +93,18 @@ public class StrategyCostBenefitAdaptive
                             .Cells[potentialLocation].Resources));
 
                     var updatedBenefit = CalculatePotentialBenefit(updatedCrystalResourcesVisited,
-                        updatedEggsResourcesVisited, currentNumAnts,
+                        updatedEggsResourcesVisited, currentNumAnts, _gameState.MyAntCount,
                         currentlyVisiting.Count + found.dist, lookAhead, enemyPotentialConsumeRate);
 
                     if (isEgg)
                     {
                         Console.Error.WriteLine(
-                            $"CostBenefit for location {potentialLocation} Eggs: {_gameState.Cells[potentialLocation].Resources} (dist: {found.dist}) = {currentBenefit} -> {updatedBenefit}");
+                            $"CostBenefit for location {potentialLocation} Eggs: {_gameState.Cells[potentialLocation].Resources} (dist: {found.index}=>{found.dist}) = {currentBenefit} -> {updatedBenefit}");
                     }
                     else
                     {
                         Console.Error.WriteLine(
-                            $"CostBenefit for location {potentialLocation} Crystals: {_gameState.Cells[potentialLocation].Resources} (dist: {found.dist}) = {currentBenefit} -> {updatedBenefit}");
+                            $"CostBenefit for location {potentialLocation} Crystals: {_gameState.Cells[potentialLocation].Resources} (dist: {found.index}=>{found.dist}) = {currentBenefit} -> {updatedBenefit}");
                     }
 
                     return (found.dist, updatedBenefit - currentBenefit);
@@ -112,25 +120,34 @@ public class StrategyCostBenefitAdaptive
         {
             Console.Error.WriteLine("Strategy: Currently visiting: " + string.Join(",", currentlyVisiting));
             var potentialLocations = _gameState.CrystalLocations.Select(index => (index, isEgg: false)).ToList();
-            var myVisitedEggLocations = currentlyVisiting.Where(x => _gameState.EggLocations.Contains(x))
-                .Select(index => (index, resources: (float)_gameState.Cells[index].Resources)).ToList();
+            var myVisitedEggLocations = currentlyVisiting
+                .Select(index => (index, resources: (float)_gameState.Cells[index].Resources))
+                .Where(x => _gameState.EggLocations.Contains(x.index))
+                .ToList();
             var myVisitedCrystalLocations =
-                currentlyVisiting.Where(x => _gameState.CrystalLocations.Contains(x))
-                    .Select(index => (index, resources: (float)_gameState.Cells[index].Resources)).ToList();
+                currentlyVisiting.Select(index => (index, resources: (float)_gameState.Cells[index].Resources))
+                    .Where(x => _gameState.CrystalLocations.Contains(x.index))
+                    .ToList();
 
             if (!myVisitedEggLocations.Any())
             {
                 potentialLocations.AddRange(_gameState.EggLocations.Select(index => (index, isEgg: true)));
             }
 
-            var enemyLocations = _gameState.Cells.Where(x => x.NumEnemyAnts > 0).Select((_, index) => index).ToList();
+            var enemyLocations = _gameState.Cells.Select((cell, index) => (index, cell.NumEnemyAnts))
+                .Where(x => x.NumEnemyAnts > 0).Select(x => x.index).ToList();
 
             potentialLocations.RemoveAll(x => currentlyVisiting.Contains(x.index));
+
+            var myLocationsWithAnts = _gameState.Cells.Select((cell, index) => (index, cell.NumMyAnts))
+                .Where(x => x.NumMyAnts > 0).Select(x => x.index).ToList();
+            Console.Error.WriteLine("Strategy: Enemy visiting (ants): " + string.Join(",", enemyLocations));
+            Console.Error.WriteLine("Strategy: Currently visiting (ants): " + string.Join(",", myLocationsWithAnts));
 
             var costBenefits = potentialLocations.Select(x => (
                     x.index,
                     costBenefit: CostBenefit(
-                        currentlyVisiting,
+                        myLocationsWithAnts, //currentlyVisiting,
                         enemyLocations,
                         x.index,
                         x.isEgg,

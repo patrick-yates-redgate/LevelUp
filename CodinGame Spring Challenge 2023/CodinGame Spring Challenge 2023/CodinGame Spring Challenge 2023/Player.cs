@@ -21,12 +21,15 @@ public static class Player
 
         pathFinder.OnPathExpansionComplete(() =>
         {
+            Console.Error.WriteLine("OnPathExpansionComplete");
+            Console.Error.WriteLine("DebugDistances: " + pathFinder.DebugDistances(gameState));
+            Console.Error.WriteLine("DebugPaths: " + pathFinder.DebugPaths(gameState));
             GameStateReader.DetermineOwnership(gameState, pathFinder);
             mapInfo.UpdateStatic();
         });
 
         var maxLoops = 20;
-        while (!pathFinder.ExpandPathKnowledge() && maxLoops-- > 0)
+        while (!pathFinder.ExpandPathKnowledge() && --maxLoops > 0)
         {
         }
 
