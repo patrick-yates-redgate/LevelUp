@@ -4,25 +4,27 @@ namespace CodinGame_Spring_Challenge_2023.Utils;
 
 public class OneOf<T, U>
 {
-    private readonly T? _value1;
-    private readonly U? _value2;
-    
+    private readonly bool _isValue1;
+
     public OneOf(T value)
     {
-        _value1 = value;
+        Value1 = value;
+        _isValue1 = true;
     }
     
     public OneOf(U value)
     {
-        _value2 = value;
+        Value2 = value;
+        _isValue1 = false;
     }
     
-    public bool IsValue1 => _value1 != null;
-    public bool IsValue2 => _value2 != null;
+    public bool IsValue1 => _isValue1;
+    public bool IsValue2 => !_isValue1;
     
-    public T Value1 => _value1!;
-    public U Value2 => _value2!;
-    
+    public T Value1 { get; }
+
+    public U Value2 { get; }
+
     public static implicit operator OneOf<T, U>(T value) => new (value);
     public static implicit operator OneOf<T, U>(U value) => new (value);
     
@@ -31,7 +33,7 @@ public class OneOf<T, U>
     
     public bool Is<TV>()
     {
-        return typeof(TV) == typeof(T) == IsValue1;
+        return (typeof(TV) == typeof(T) && IsValue1) || (typeof(TV) == typeof(U) && IsValue2);
     }
     
     public override string ToString()

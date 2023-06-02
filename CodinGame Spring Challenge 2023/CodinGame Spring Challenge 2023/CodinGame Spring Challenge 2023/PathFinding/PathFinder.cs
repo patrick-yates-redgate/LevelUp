@@ -11,8 +11,8 @@ public class PathFinder
 {
     private readonly int _numCells;
 
-    private readonly List<Dictionary<int, (int dir, int dist)>> _cellPathMap =
-        new List<Dictionary<int, (int dir, int dist)>>();
+    private readonly List<Dictionary<int, (OneOrMany<int> dir, int dist)>> _cellPathMap =
+        new();
 
     private bool _fullyExpanded;
 
@@ -26,7 +26,7 @@ public class PathFinder
         BuildPathInfo(gameState);
     }
 
-    public PathFinder(List<Dictionary<int, (int dir, int dist)>> cellPathMap, int numCells)
+    public PathFinder(List<Dictionary<int, (OneOrMany<int> dir, int dist)>> cellPathMap, int numCells)
     {
         _numCells = numCells;
         _cellPathMap = cellPathMap;
@@ -42,7 +42,7 @@ public class PathFinder
     {
         if (_fullyExpanded) return true;
 
-        var newPathsFound = new List<(int from, int fromDir, int to, int toDir, int dist)>();
+        var newPathsFound = new List<(int from, int fromDir, int to, OneOrMany<int> toDir, int dist)>();
 
         for (var i = 0; i < _numCells; ++i)
         {
@@ -60,8 +60,22 @@ public class PathFinder
 
                     if (pathsForCell.TryGetValue(otherCellIndex, out var myCurrentBestPathToOtherCell))
                     {
-                        if (myCurrentBestPathToOtherCell.dist <= possibleDistViaKnownCell)
+                        if (myCurrentBestPathToOtherCell.dist < possibleDistViaKnownCell)
                         {
+                            continue;
+                        }
+
+                        if (myCurrentBestPathToOtherCell.dist == possibleDistViaKnownCell)
+                        {
+                            var currentDir = myCurrentBestPathToOtherCell.dir;
+                            var addNewDir = _cellPathMap[otherCellIndex][knownCellIndex].dir;
+                            if (currentDir.IsEquivalent(addNewDir)) continue;
+                            
+                            var mergedPathDirs = currentDir.Merge(addNewDir);
+
+                            newPathsFound.Add((i, pathToKnownCell.dir, otherCellIndex, mergedPathDirs,
+                                possibleDistViaKnownCell));
+
                             continue;
                         }
                     }
@@ -95,7 +109,7 @@ public class PathFinder
     {
         for (var i = 0; i < gameState.NumberOfCells; ++i)
         {
-            var pathsForCell = new Dictionary<int, (int dir, int dist)>();
+            var pathsForCell = new Dictionary<int, (OneOrMany<int> dir, int dist)>();
             _cellPathMap.Add(pathsForCell);
 
             var cell = gameState.Cells[i];
@@ -202,7 +216,8 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
         return closest.Take(num);
     }
 
-    public IOrderedEnumerable<(int fromIndex, int toIndex, int dist, CellType cellType)> OrderedPairs(GameState gameState,
+    public IOrderedEnumerable<(int fromIndex, int toIndex, int dist, CellType cellType)> OrderedPairs(
+        GameState gameState,
         IEnumerable<int> fromList, params (IEnumerable<int>, CellType)[] indexLists)
     {
         var orderedPairs = (
@@ -271,5 +286,48 @@ for (var i = 0; i < _gameState.NumberOfCells; ++i)
         }
 
         return output;
+    }
+
+    public OneOf<IList<int>, IList<IList<int>>> Paths(GameState gameState, int fromIndex, int toIndex)
+    {
+        if (fromIndex == toIndex)
+        {
+            return new List<int> { fromIndex };
+        }
+
+        if (!_cellPathMap[fromIndex].TryGetValue(toIndex, out var pathHeading))
+        {
+            return new List<int>();
+        }
+
+        IList<int> BuildPath(int startIndex, IList<int> onwardPath)
+        {
+            onwardPath.Insert(0, startIndex);
+            return onwardPath;
+        }
+
+        OneOf<IList<int>, IList<IList<int>>> FollowPath(int dir) => Paths(
+                gameState,
+                gameState.Cells[fromIndex].Neighbours[dir],
+                toIndex)
+            .Match(
+                singlePath => new OneOf<IList<int>, IList<IList<int>>>(BuildPath(fromIndex, singlePath)),
+                multiplePaths => multiplePaths.Select(path => BuildPath(fromIndex, new List<int>(path))).ToList()
+            );
+
+        return pathHeading.dir.Match(
+            singleDir => FollowPath(singleDir),
+            multipleDirs =>
+            {
+                var paths = new List<IList<int>>();
+                foreach (var dir in multipleDirs)
+                {
+                    FollowPath(dir).Match(
+                        singlePath => paths.Add(singlePath),
+                        multiplePaths => paths.AddRange(multiplePaths));
+                }
+
+                return paths;
+            });
     }
 }

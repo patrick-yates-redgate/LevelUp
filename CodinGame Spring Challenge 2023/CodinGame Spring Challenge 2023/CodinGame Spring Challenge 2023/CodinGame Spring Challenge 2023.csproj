@@ -62,6 +62,7 @@
         <Compile Include="Utils\NotFound.cs" />
         <Compile Include="Utils\NotFoundIndex.cs" />
         <Compile Include="Utils\OneOf.cs" />
+        <Compile Include="Utils\OneOrMany.cs" />
     </ItemGroup>
     <ItemGroup>
       <Content Include="all_source_combined.txt" />

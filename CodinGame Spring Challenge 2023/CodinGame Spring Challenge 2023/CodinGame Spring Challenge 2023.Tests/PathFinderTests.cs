@@ -4,6 +4,7 @@ using System.Linq;
 using CodinGame_Spring_Challenge_2023.Core;
 using CodinGame_Spring_Challenge_2023.Domain;
 using CodinGame_Spring_Challenge_2023.PathFinding;
+using CodinGame_Spring_Challenge_2023.Utils;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -136,36 +137,36 @@ namespace CodinGame_Spring_Challenge_2023.Tests
         [Test]
         public void ThatIfWeHaveAnInefficientPathThenWeWillCorrectThroughExpansion()
         {
-            var cellPathMap = new List<Dictionary<int, (int dir, int dist)>> {
-                new Dictionary<int, (int dir, int dist)>
+            var cellPathMap = new List<Dictionary<int, (OneOrMany<int> dir, int dist)>> {
+                new Dictionary<int, (OneOrMany<int> dir, int dist)>
                 {
                     [1] = (0, 1),
                     [2] = (4, 1),
                     [3] = (5, 1),
                     [4] = (1, 2)
                 },
-                new Dictionary<int, (int dir, int dist)>
+                new Dictionary<int, (OneOrMany<int> dir, int dist)>
                 {
                     [0] = (3, 1),
                     [3] = (4, 1),
                     [4] = (5, 1),
                     [2] = (3, 2)
                 },
-                new Dictionary<int, (int dir, int dist)>
+                new Dictionary<int, (OneOrMany<int> dir, int dist)>
                 {
                     [0] = (1, 1),
                     [3] = (0, 1),
                     [1] = (1, 2),
                     [4] = (1, 3) //Inefficient, it should go direct to 2 in dir 5 (dist 2)
                 },
-                new Dictionary<int, (int dir, int dist)>
+                new Dictionary<int, (OneOrMany<int> dir, int dist)>
                 {
                     [0] = (2, 1),
                     [1] = (1, 1),
                     [2] = (3, 1),
                     [4] = (0, 1)
                 },
-                new Dictionary<int, (int dir, int dist)>
+                new Dictionary<int, (OneOrMany<int> dir, int dist)>
                 {
                     [1] = (2, 2),
                     [3] = (3, 3),
@@ -185,6 +186,40 @@ namespace CodinGame_Spring_Challenge_2023.Tests
             //After expansion
             pathFinder.Distance(2, 4).Should().Be(2); //Initial state
             pathFinder.Distance(4, 2).Should().Be(2); //Initial state
+        }
+
+        
+        /*
+         *          0
+         *         / \
+         *        1 - 2
+         *         \ /
+         *          3
+         */
+        [Test]
+        public void TestThatWhenThereAreMultipleRoutesAtTheSameDistWeReturnBothAsAListOfDirections()
+        {
+            var cell0 = BuildCell((4, 1), (5, 2));
+            var cell1 = BuildCell((0, 2), (1, 0), (5, 3));
+            var cell2 = BuildCell((2, 0), (3, 1), (4, 3));
+            var cell3 = BuildCell((1, 2), (2, 1));
+            var gameState = BuildGameState(cell0, cell1, cell2, cell3);
+            
+            var pathFinder = new PathFinder(gameState);
+            while (!pathFinder.ExpandPathKnowledge())
+            {
+            }
+            
+            pathFinder.Distance(0, 3).Should().Be(2);
+            var paths = pathFinder.Paths(gameState, fromIndex: 0, toIndex: 3);
+            paths.IsValue1.Should().BeFalse("There should be multiple paths here");
+            paths.IsValue2.Should().BeTrue();
+            
+            paths.Value2.Should().BeEquivalentTo(new List<List<int>>
+            {
+                new List<int> {0, 1, 3},
+                new List<int> {0, 2, 3}
+            });
         }
     }
 }
