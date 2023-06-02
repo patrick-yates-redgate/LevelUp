@@ -12,20 +12,21 @@ namespace CodinGame_Spring_Challenge_2023.PathFinding
             _pathFinder = pathFinder;
         }
         
-        public IEnumerable<(int fromIndex, int toIndex)> GetShortestTree(IEnumerable<int> includeLocations)
+        public IEnumerable<(int fromIndex, int toIndex)> GetShortestTree(IEnumerable<int> startLocations, IEnumerable<int> includeLocations)
         {
             var shortestTree = new List<(int fromIndex, int toIndex)>();
             
             var visited = new HashSet<int>();
             var unvisited = new HashSet<int>();
+            foreach (var index in startLocations)
+            {
+                visited.Add(index);
+            }
+            
             foreach (var index in includeLocations)
             {
                 unvisited.Add(index);
             }
-            
-            var currentCellIndex = unvisited.First();
-            visited.Add(currentCellIndex);
-            unvisited.Remove(currentCellIndex);
             
             while (unvisited.Count > 0)
             {

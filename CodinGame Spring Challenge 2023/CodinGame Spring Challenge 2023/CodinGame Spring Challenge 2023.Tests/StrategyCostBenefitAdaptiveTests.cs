@@ -8,14 +8,6 @@ namespace CodinGame_Spring_Challenge_2023.Tests
     [TestFixture]
     public class StrategyCostBenefitAdaptiveTests
     {
-        /*
-         *
-    public static float CalculatePotentialBenefit(List<(int index, float resources)> crystalResources,
-        List<(int index, float resources)> eggResources, float myAnts,
-        int numLocations, int numFrames, 0)
-         * 
-         */
-
         [Test]
         public void ThatWithOneCrystalResourceAndOneAntAtOneLocationOverOneFrames_WeGetAPotentialBenefitOf1()
         {

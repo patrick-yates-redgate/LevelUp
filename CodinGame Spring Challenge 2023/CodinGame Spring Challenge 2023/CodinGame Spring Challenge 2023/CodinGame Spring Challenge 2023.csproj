@@ -40,6 +40,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Core\StrategyType.cs" />
         <Compile Include="Domain\Base.cs" />
         <Compile Include="Domain\Cell.cs" />
         <Compile Include="Domain\CellType.cs" />

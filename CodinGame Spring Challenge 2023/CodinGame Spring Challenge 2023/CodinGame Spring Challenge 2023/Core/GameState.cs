@@ -34,4 +34,8 @@ public class GameState
     public Dictionary<int, int> MyAntLookup { get; set; } = new ();
 
     public Dictionary<int, int> EnemyAntLookup { get; set; } = new ();
+    
+    public StrategyType Strategy { get; set; }
+    
+    public float StrategyStrength { get; set; }
 }
