@@ -1,5 +1,6 @@
 ﻿//Taken from https://www.thomasclaudiushuber.com/2023/01/17/csharp-11-generic-attributes/
 
+using System.Reflection;
 using CS10ToCS11_GenericAttributes;
 
 var person = new Person { FirstName = "Thomas", LastName = "Huber" };
@@ -12,7 +13,7 @@ WriteObjectToConsole(department);
 
 Console.ReadLine();
 
-void WriteObjectToConsole(object obj)
+void WriteObjectToConsole<T>(T obj)
 {
     var wasWritten = false;
     var attributes = obj.GetType().GetCustomAttributes(
@@ -23,9 +24,11 @@ void WriteObjectToConsole(object obj)
             .GetGenericTypeDefinition() == typeof(ConsoleWriterAttribute<>))
     {
         var consoleWriterType = attributes[0].GetType().GetGenericArguments()[0];
-        if (Activator.CreateInstance(consoleWriterType) is IConsoleWriter consoleWriter)
+        var writeMethod = consoleWriterType.GetMethod("Write", BindingFlags.Static | BindingFlags.Public);
+
+        if (writeMethod != null)
         {
-            consoleWriter.Write(obj);
+            writeMethod.Invoke(null, new object?[]{ obj });
             wasWritten = true;
         }
     }

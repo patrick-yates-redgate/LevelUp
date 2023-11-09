@@ -2,32 +2,33 @@ namespace CS10ToCS11_GenericAttributes;
 
 public interface IConsoleWriter
 {
-    void Write(object obj);
 }
 
-public class PersonConsoleWriter : IConsoleWriter
+public interface IConsoleWriter<in T> : IConsoleWriter
 {
-    public void Write(object obj)
+    static abstract void Write(T obj);
+}
+
+public class PersonConsoleWriter : IConsoleWriter<Person>
+{
+    public static void Write(Person person)
     {
-        var person = (Person)obj;
         Console.WriteLine($"Person => FirstName:{person.FirstName} LastName:{person.LastName}");
     }
 }
 
-public class AddressConsoleWriter : IConsoleWriter
+public class AddressConsoleWriter : IConsoleWriter<Address>
 {
-    public void Write(object obj)
+    public static void Write(Address address)
     {
-        var address = (Address)obj;
         Console.WriteLine($"Address => City:{address.City}");
     }
 }
 
-public class DepartmentConsoleWriter : IConsoleWriter
+public class DepartmentConsoleWriter : IConsoleWriter<Department>
 {
-    public void Write(object obj)
+    public static void Write(Department department)
     {
-        var department = (Department)obj;
         Console.WriteLine($"Department => Name:{department.Name}");
     }
 }
