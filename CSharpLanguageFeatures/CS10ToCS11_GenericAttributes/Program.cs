@@ -16,15 +16,14 @@ void WriteObjectToConsole(object obj)
 {
     var wasWritten = false;
     var attributes = obj.GetType().GetCustomAttributes(
-        typeof(ConsoleWriterAttribute), inherit: false);
+        typeof(ConsoleWriterAttribute<>), inherit: false);
 
     if (attributes.Length == 1
-        && attributes[0] is ConsoleWriterAttribute consoleWriterAttribute)
+        && attributes[0].GetType()
+            .GetGenericTypeDefinition() == typeof(ConsoleWriterAttribute<>))
     {
-        var consoleWriterType = consoleWriterAttribute.ConsoleWriterType;
-        var consoleWriter = Activator.CreateInstance(consoleWriterType)
-            as IConsoleWriter;
-        if (consoleWriter is not null)
+        var consoleWriterType = attributes[0].GetType().GetGenericArguments()[0];
+        if (Activator.CreateInstance(consoleWriterType) is IConsoleWriter consoleWriter)
         {
             consoleWriter.Write(obj);
             wasWritten = true;

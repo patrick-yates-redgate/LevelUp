@@ -1,19 +1,19 @@
 namespace CS10ToCS11_GenericAttributes;
 
-[ConsoleWriter(typeof(PersonConsoleWriter))]
+[ConsoleWriter<PersonConsoleWriter>]
 public class Person
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
 }
 
-[ConsoleWriter(typeof(AddressConsoleWriter))]
+[ConsoleWriter<AddressConsoleWriter>]
 public class Address
 {
     public string? City { get; set; }
 }
 
-[ConsoleWriter(typeof(DepartmentConsoleWriter))]
+[ConsoleWriter<DepartmentConsoleWriter>]
 public class Department
 {
     public string? Name { get; set; }
