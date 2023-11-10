@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS11ToCS12_LambdaMethodGroupDefaults", "CS11ToCS12_LambdaMethodGroupDefaults\CS11ToCS12_LambdaMethodGroupDefaults.csproj", "{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS10ToCS11_GenericAttributes", "CS10ToCS11_GenericAttributes\CS10ToCS11_GenericAttributes.csproj", "{06E2E9C8-3C27-4848-B81C-4902B5BA70A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06E2E9C8-3C27-4848-B81C-4902B5BA70A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06E2E9C8-3C27-4848-B81C-4902B5BA70A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06E2E9C8-3C27-4848-B81C-4902B5BA70A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06E2E9C8-3C27-4848-B81C-4902B5BA70A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
