@@ -4,11 +4,10 @@ public static class LambdaParams
 {
     public static void Example()
     {
-        var createAdult = (string name) => new Adult(name, Array.Empty<Child>());
-        var createAdultWithChildren = (string name, Child[] children) => new Adult(name, children);
+        var createAdult = (string name, params Child[] children) => new Adult(name, children);
 
         var adultB = createAdult("Julia");
-        var adultA = createAdultWithChildren("Thomas", new []{ new Child("Max"), new Child("Lisa") });
+        var adultA = createAdult("Thomas", new Child("Max"), new Child("Lisa"));
 
         Console.WriteLine(adultA);
         Console.WriteLine(adultB);
