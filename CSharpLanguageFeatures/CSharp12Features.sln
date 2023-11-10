@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS11ToCS12_LambdaMethodGroupDefaults", "CS11ToCS12_LambdaMethodGroupDefaults\CS11ToCS12_LambdaMethodGroupDefaults.csproj", "{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F77D0B-C4A2-409E-92F3-90FFE2450B52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
