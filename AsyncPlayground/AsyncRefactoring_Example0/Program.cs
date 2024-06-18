@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+
 Console.WriteLine("Hello, World!");
 ILibrary library = new Library();
 
@@ -11,15 +12,30 @@ Console.WriteLine(await asyncCode.RunAsync());
 internal interface ILibrary
 {
     string PerformLongRunningOperation();
+
+    Task<string> PerformLongRunningOperationAsync();
 }
 
 internal class Library : ILibrary
 {
-    public string PerformLongRunningOperation()
+    private async Task<string> GetCoreAsync(bool sync)
     {
-        Thread.Sleep(1000);
-        return "Honestly, this wait is necessary!";
+        var server = new ThirdPartyLibrary();
+
+        return sync
+            ? server.Get("This is a synchronous method")
+            : await server.GetAsync("This is an async method");
     }
+
+    public string PerformLongRunningOperation() => GetCoreAsync(false).GetAwaiter().GetResult();
+
+    public Task<string> PerformLongRunningOperationAsync() => GetCoreAsync(true);
+}
+
+internal static class LibraryExtensions
+{
+    public static string PerformLongRunningOperation(this ILibrary library) =>
+        library.PerformLongRunningOperationAsync().GetAwaiter().GetResult();
 }
 
 internal class BlockingCode(ILibrary library)
@@ -32,10 +48,11 @@ internal class BlockingCode(ILibrary library)
 
 internal class AsyncCode(ILibrary blockingLibrary)
 {
-    public Task<string> RunAsync()
-    {
-        var result = blockingLibrary.PerformLongRunningOperation();
+    public Task<string> RunAsync() => blockingLibrary.PerformLongRunningOperationAsync();
+}
 
-        return Task.FromResult(result);
-    }
+internal class ThirdPartyLibrary
+{
+    public string Get(string message) => message;
+    public Task<string> GetAsync(string message) => Task.FromResult(message);
 }
