@@ -1,10 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
-
-using Nito.AsyncEx.AsyncDiagnostics;
-
-[assembly: AsyncDiagnosticAspect]
-
 var _taskHolder = new A();
+
+Console.WriteLine("Elided stack trace (not awaited):");
+Console.WriteLine(_taskHolder.Method().GetAwaiter().GetResult());
 
 Console.WriteLine("Elided stack trace:");
 Console.WriteLine(await _taskHolder.Method());
@@ -392,11 +390,22 @@ public class Z
     
     public async Task<string> MethodAsync()
     {
-        string before; try { throw new Exception("Before"); } catch(Exception ex) { before = ex.ToAsyncDiagnosticString(); }
+        string before = Environment.StackTrace;// try { throw new Exception("Before"); } catch(Exception ex) { before = ex.ToString(); }
+        string beforeException;  try { throw new Exception("Before"); } catch(Exception ex) { beforeException = ex.ToString(); }
         
         await Task.Delay(1);
-        string after; try { throw new Exception("After"); } catch(Exception ex) { after = ex.ToAsyncDiagnosticString(); }
-        
-        return $"Before:{Environment.NewLine}{before}{Environment.NewLine} and after:{Environment.NewLine}{after}";
+        string after = Environment.StackTrace; // try { throw new Exception("After"); } catch(Exception ex) { after = ex.ToString(); }
+        string afterException; try { throw new Exception("After"); } catch(Exception ex) { afterException = ex.ToString(); }
+
+        return $"""
+                before:{before}
+                
+                before(exception:{beforeException}
+                
+                after:{after}
+                
+                after(exception):{afterException}";
+                
+                """;
     }
 }
