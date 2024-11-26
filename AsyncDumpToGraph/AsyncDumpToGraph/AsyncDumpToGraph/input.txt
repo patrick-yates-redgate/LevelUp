@@ -1,0 +1,8 @@
+Copy output from !dumpasync in windbg to this file.
+
+e.g
+
+STACK 1
+<< Awaiting: 000002d7bd9ccb20 00007ffbe98f9010 System.Runtime.CompilerServices.ConfiguredTaskAwaitable+ConfiguredTaskAwaiter >>
+  000002d7bd9ccac0 00007ffbe99a85b0 (1) Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing.SelfDiagnostics.SelfDiagnosticsConfigRefresher+<Worker>d__12 @ 7ffbe9418ba0
+    000002d7bd9cc6b8 00007ffbe99a39a8 ( ) System.Threading.Tasks.UnwrapPromise<System.Threading.Tasks.VoidTaskResult>

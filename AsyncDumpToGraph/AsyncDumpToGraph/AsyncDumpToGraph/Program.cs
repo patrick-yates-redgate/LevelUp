@@ -19,13 +19,9 @@ var stacks = new List<AsyncStack>();
 
 AsyncStack? previousAsyncStack = null;
 
-var index = 0;
-
 //Loop through each row and parse if it does not start with STACK
 foreach (var line in readAllLinesFromInputFile)
 {
-    ++index;
-    
     if (line.StartsWith("STACK") || string.IsNullOrWhiteSpace(line))
     {
         if (previousAsyncStack != null)
@@ -52,7 +48,84 @@ foreach (var line in readAllLinesFromInputFile)
 }
 
 //Serialize to JSON and write to output file
-var json = JsonSerializer.Serialize(stacks, new JsonSerializerOptions { WriteIndented = true });
+var json = JsonSerializer.Serialize(stacks, new JsonSerializerOptions { WriteIndented = true, MaxDepth = 100 });
 File.WriteAllText("../../../output.json", json);
 
-record AsyncStack(string objectAddress, string methodAddress, string description, string? asyncAddress, bool isAwaiting, AsyncStack? parent);
+var groupedStacks = GroupStacks(stacks);
+
+//Write to output file
+var output = new StringBuilder();
+
+PrintStacksWithCounts(output, groupedStacks);
+
+//Write all groups to console:
+Console.WriteLine(output.ToString());
+
+File.WriteAllText("../../../output_grouped.txt", output.ToString());
+
+/*
+//Group records by methodAddress:
+var groupedByMethodAddress = stacks.GroupBy(x => x.methodAddress).ToList();
+
+//sort by count of records in each group
+groupedByMethodAddress.Sort((x, y) => y.Count().CompareTo(x.Count()));
+
+//Write to output file
+var output = new StringBuilder();
+foreach (var group in groupedByMethodAddress)
+{
+    output.AppendLine($"Object Address: {group.Key} Count: {group.Count()}");
+    foreach (var asyncStack in group)
+    {
+        output.AppendLine($"  {asyncStack.methodAddress} {asyncStack.description}");
+    }
+}
+
+//Write all groups to console:
+Console.WriteLine(output.ToString());
+
+File.WriteAllText("../../../output_grouped.txt", output.ToString());
+*/
+
+List<GroupedAsyncStack> GroupStacks(List<AsyncStack> stacks)
+{
+    if (!stacks.Any())
+    {
+        return [];
+    }
+    
+    var outputList = new List<GroupedAsyncStack>();
+    
+    //Group records by methodAddress:
+    var groupedByMethodAddress = stacks.GroupBy(x => x.methodAddress).ToList();
+
+    //sort by count of records in each group
+    groupedByMethodAddress.Sort((x, y) => y.Count().CompareTo(x.Count()));
+
+    foreach (var group in groupedByMethodAddress)
+    {
+        var methodAddress = group.Key;
+        var groupedStacks = group.ToList();
+
+        var stack = groupedStacks.First();
+        var childStacks = groupedStacks.Where(x => x.childStacks != null).Select(x => x.childStacks!).ToList();
+        
+        outputList.Add(new GroupedAsyncStack(groupedStacks.Select(x => x.objectAddress).ToList(), methodAddress, stack.description, stack.asyncAddress, stack.isAwaiting, GroupStacks(childStacks)));
+    }
+
+    return outputList;
+}
+
+void PrintStacksWithCounts(StringBuilder output, List<GroupedAsyncStack> groupedStacks, string prefix = "")
+{
+    foreach (var stack in groupedStacks)
+    {
+        output.AppendLine($"{prefix} Method Address: {stack.methodAddress} Objects: {stack.objectAddresses.Count} {stack.description}");
+        
+        PrintStacksWithCounts(output, stack.childStacks, $"{prefix}  ");
+    }
+}
+
+record AsyncStack(string objectAddress, string methodAddress, string description, string? asyncAddress, bool isAwaiting, AsyncStack? childStacks);
+
+record GroupedAsyncStack(List<string> objectAddresses, string methodAddress, string description, string? asyncAddress, bool isAwaiting, List<GroupedAsyncStack> childStacks);
