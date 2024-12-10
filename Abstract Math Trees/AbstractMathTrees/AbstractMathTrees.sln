@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractMathTrees", "AbstractMathTrees\AbstractMathTrees.csproj", "{D3A71BE2-2AA3-48EF-8D38-7087E2771E2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractMathTreesTests", "AbstractMathTreesTests\AbstractMathTreesTests.csproj", "{44FA2C15-7D08-4C05-A9E1-914030FF3E99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D3A71BE2-2AA3-48EF-8D38-7087E2771E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A71BE2-2AA3-48EF-8D38-7087E2771E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3A71BE2-2AA3-48EF-8D38-7087E2771E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A71BE2-2AA3-48EF-8D38-7087E2771E2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44FA2C15-7D08-4C05-A9E1-914030FF3E99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44FA2C15-7D08-4C05-A9E1-914030FF3E99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44FA2C15-7D08-4C05-A9E1-914030FF3E99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44FA2C15-7D08-4C05-A9E1-914030FF3E99}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
