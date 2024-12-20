@@ -17,6 +17,10 @@ class Player
         var width = int.Parse(inputs[0]); // columns in the game grid
         var height = int.Parse(inputs[1]); // rows in the game grid
 
+        var map = new Dictionary<(int x, int y), string>();
+        
+        var organismNodes = new Dictionary<int, List<(int x, int y, int id)>>();
+
         // game loop
         while (true)
         {
@@ -34,26 +38,143 @@ class Player
                 var organDir = inputs[5]; // N,E,S,W or X if not an organ
                 var organParentId = int.Parse(inputs[6]);
                 var organRootId = int.Parse(inputs[7]);
+                
+                map[(x, y)] = type;
+
+                if (owner == 1)
+                {
+                    if (!organismNodes.ContainsKey(organRootId))
+                    {
+                        organismNodes[organRootId] = new List<(int x, int y, int id)>();   
+                    }
+                    
+                    organismNodes[organRootId].Add((x, y, organId));
+                }
             }
-            inputs = Console.ReadLine()!.Split(' ');
-            var myA = int.Parse(inputs[0]);
-            var myB = int.Parse(inputs[1]);
-            var myC = int.Parse(inputs[2]);
-            var myD = int.Parse(inputs[3]); // your protein stock
-            inputs = Console.ReadLine()!.Split(' ');
-            var oppA = int.Parse(inputs[0]);
-            var oppB = int.Parse(inputs[1]);
-            var oppC = int.Parse(inputs[2]);
-            var oppD = int.Parse(inputs[3]); // opponent's protein stock
+
+            var myStock = ReadStockLevels();
+            var oppStock = ReadStockLevels();
+            
             var requiredActionsCount = int.Parse(Console.ReadLine()!); // your number of organisms, output an action for each one in any order
+            
+            var keys = organismNodes.Keys.ToArray();
+            if (keys.Length != requiredActionsCount)
+            {
+                Console.Error.WriteLine($"Wrong number of actions. Expected {requiredActionsCount}, got {keys.Length}");
+            }
+            
             for (var i = 0; i < requiredActionsCount; i++)
             {
-
                 // Write an action using Console.WriteLine()
                 // To debug: Console.Error.WriteLine("Debug messages...");
+                
+                var organismRootId = keys[i];
+                var nodes = organismNodes[organismRootId];
+                var potentialMoves = new List<(int x, int y)>();
+                var preferredMoves = new List<(int x, int y)>();
+                var moveIds = new Dictionary<(int x, int y), int>();
+                foreach (var node in nodes)
+                {
+                    if (node.x > 0)
+                    {
+                        var move = (node.x - 1, node.y);
+                        if (!map.ContainsKey(move))
+                        {
+                            potentialMoves.Add(move);
+                            moveIds[move] = node.id;
+                        }
+                        else if (map[move].Length == 1) //["A", "B", "C", "D"]
+                        {
+                            preferredMoves.Add(move);
+                            potentialMoves.Add(move);
+                            moveIds[move] = node.id;
+                        }
+                    }
+                    
+                    if (node.x < width - 1)
+                    {
+                        var move = (node.x + 1, node.y);
+                        if (!map.ContainsKey(move))
+                        {
+                            potentialMoves.Add(move);
+                            moveIds[move] = node.id;
+                        }
+                        else if (map[move].Length == 1) //["A", "B", "C", "D"]
+                        {
+                            preferredMoves.Add(move);
+                            potentialMoves.Add(move);
+                            moveIds[move] = node.id;
+                        }
+                    }
+                    
+                    if (node.y > 0)
+                    {
+                        var move = (node.x, node.y - 1);
+                        if (!map.ContainsKey(move))
+                        {
+                            potentialMoves.Add(move);
+                            moveIds[move] = node.id;
+                        }
+                        else if (map[move].Length == 1) //["A", "B", "C", "D"]
+                        {
+                            preferredMoves.Add(move);
+                            potentialMoves.Add(move);
+                            moveIds[move] = node.id;
+                        }
+                    }
+                    
+                    if (node.y < height - 1)
+                    {
+                        var move = (node.x, node.y + 1);
+                        if (!map.ContainsKey(move))
+                        {
+                            potentialMoves.Add(move);
+                            moveIds[move] = node.id;
+                        }
+                        else if (map[move].Length == 1) //["A", "B", "C", "D"]
+                        {
+                            preferredMoves.Add(move);
+                            potentialMoves.Add(move);
+                            moveIds[move] = node.id;
+                        }
+                    }
+                }
 
-                Console.WriteLine("WAIT");
+                if (preferredMoves.Count > 0)
+                {
+                    var move = preferredMoves[DateTime.Now.Microsecond % preferredMoves.Count];
+                    Console.WriteLine($"GROW {moveIds[move]} {move.x} {move.y} BASIC");
+                }
+                else if (potentialMoves.Count > 0)
+                {
+                    var move = potentialMoves[DateTime.Now.Microsecond % potentialMoves.Count];
+                    Console.WriteLine($"GROW {moveIds[move]} {move.x} {move.y} BASIC");
+                }
+                else
+                {
+                    Console.WriteLine("WAIT");   
+                }
             }
         }
+    }
+
+    private struct ProteinStockLevel
+    {
+        public int A { get; set; }
+        public int B { get; set; }
+        public int C { get; set; }
+        public int D { get; set; }
+    }
+
+    private static ProteinStockLevel ReadStockLevels()
+    {
+        var inputs = Console.ReadLine()!.Split(' ');
+        return new ProteinStockLevel
+        {
+            A = int.Parse(inputs[0]),
+            B = int.Parse(inputs[1]),
+            C = int.Parse(inputs[2]),
+            D = int.Parse(inputs[3]),
+        };
     }
 }
