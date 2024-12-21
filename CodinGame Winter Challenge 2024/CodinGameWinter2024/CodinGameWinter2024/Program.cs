@@ -77,66 +77,22 @@ class Player
                 {
                     if (node.x > 0)
                     {
-                        var move = (node.x - 1, node.y);
-                        if (!map.ContainsKey(move))
-                        {
-                            potentialMoves.Add(move);
-                            moveIds[move] = node.id;
-                        }
-                        else if (map[move].Length == 1) //["A", "B", "C", "D"]
-                        {
-                            preferredMoves.Add(move);
-                            potentialMoves.Add(move);
-                            moveIds[move] = node.id;
-                        }
+                        CheckMove((node.x - 1, node.y), node.id, map, potentialMoves, moveIds, preferredMoves);
                     }
                     
                     if (node.x < width - 1)
                     {
-                        var move = (node.x + 1, node.y);
-                        if (!map.ContainsKey(move))
-                        {
-                            potentialMoves.Add(move);
-                            moveIds[move] = node.id;
-                        }
-                        else if (map[move].Length == 1) //["A", "B", "C", "D"]
-                        {
-                            preferredMoves.Add(move);
-                            potentialMoves.Add(move);
-                            moveIds[move] = node.id;
-                        }
+                        CheckMove((node.x + 1, node.y), node.id, map, potentialMoves, moveIds, preferredMoves);
                     }
                     
                     if (node.y > 0)
                     {
-                        var move = (node.x, node.y - 1);
-                        if (!map.ContainsKey(move))
-                        {
-                            potentialMoves.Add(move);
-                            moveIds[move] = node.id;
-                        }
-                        else if (map[move].Length == 1) //["A", "B", "C", "D"]
-                        {
-                            preferredMoves.Add(move);
-                            potentialMoves.Add(move);
-                            moveIds[move] = node.id;
-                        }
+                        CheckMove((node.x, node.y - 1), node.id, map, potentialMoves, moveIds, preferredMoves);
                     }
                     
                     if (node.y < height - 1)
                     {
-                        var move = (node.x, node.y + 1);
-                        if (!map.ContainsKey(move))
-                        {
-                            potentialMoves.Add(move);
-                            moveIds[move] = node.id;
-                        }
-                        else if (map[move].Length == 1) //["A", "B", "C", "D"]
-                        {
-                            preferredMoves.Add(move);
-                            potentialMoves.Add(move);
-                            moveIds[move] = node.id;
-                        }
+                        CheckMove((node.x, node.y + 1), node.id, map, potentialMoves, moveIds, preferredMoves);
                     }
                 }
 
@@ -155,6 +111,22 @@ class Player
                     Console.WriteLine("WAIT");   
                 }
             }
+        }
+    }
+
+    private static void CheckMove((int x, int y) move, int id, Dictionary<(int x, int y), string> map, List<(int x, int y)> potentialMoves, Dictionary<(int x, int y), int> moveIds,
+        List<(int x, int y)> preferredMoves)
+    {
+        if (!map.ContainsKey(move))
+        {
+            potentialMoves.Add(move);
+            moveIds[move] = id;
+        }
+        else if (map[move].Length == 1) //["A", "B", "C", "D"]
+        {
+            preferredMoves.Add(move);
+            potentialMoves.Add(move);
+            moveIds[move] = id;
         }
     }
 
